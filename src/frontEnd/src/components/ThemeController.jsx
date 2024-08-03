@@ -1,10 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
-import { Dropdown } from 'primereact/dropdown';
-import { Checkbox } from 'primereact/checkbox';
-import { FloatLabel } from 'primereact/floatlabel';
-import { Toast } from 'primereact/toast';
-
-
+import { useState, useEffect, useRef } from "react";
+import { Dropdown } from "primereact/dropdown";
+import { Checkbox } from "primereact/checkbox";
+import { FloatLabel } from "primereact/floatlabel";
+import { Toast } from "primereact/toast";
 
 function ThemeController() {
   let localTheme = localStorage.getItem("theme");
@@ -16,15 +14,18 @@ function ThemeController() {
   const toast = useRef(null);
 
   const show = () => {
-    toast.current.show({ severity: 'info', summary: 'Theme', detail: 'Saving Theme Preferances' });
+    toast.current.show({
+      severity: "info",
+      summary: "Theme",
+      detail: "Saving Theme Preferances",
+    });
   };
-
 
   useEffect(() => {
     if (selectedTheme) {
-      let themeLink = document.getElementById('app-theme');
-      if ((themeLink)) {
-        themeLink.href = '/themes/' + selectedTheme + '/theme.css';
+      let themeLink = document.getElementById("app-theme");
+      if (themeLink) {
+        themeLink.href = "/themes/" + selectedTheme + "/theme.css";
       }
     }
   }, [selectedTheme]);
@@ -84,14 +85,14 @@ function ThemeController() {
     "vela-green",
     "vela-orange",
     "viva-dark",
-    "viva-light"
+    "viva-light",
   ];
 
   const changeTheme = (theme) => {
     setSelectedTheme(theme);
-    let themeLink = document.getElementById('app-theme');
+    let themeLink = document.getElementById("app-theme");
     if (themeLink) {
-      themeLink.href = '/themes/' + theme + '/theme.css';
+      themeLink.href = "/themes/" + theme + "/theme.css";
     }
   };
 
@@ -103,8 +104,7 @@ function ThemeController() {
     setTimeout(() => {
       setSaveTheme(false);
       setSaveMsg("Save?");
-    }, 5000);
-
+    }, 2500);
   };
 
   return (
@@ -114,16 +114,30 @@ function ThemeController() {
         <div className="col-3 align-items-center">
           <FloatLabel>
             <label htmlFor="theme">Theme</label>
-            <Dropdown inputId="theme" value={selectedTheme} options={themeNames} onChange={(e) => changeTheme(e.value)} placeholder="Theme" filter tooltip="Site Theme" />
+            <Dropdown
+              inputId="theme"
+              value={selectedTheme}
+              options={themeNames}
+              onChange={(e) => changeTheme(e.value)}
+              placeholder="Theme"
+              filter
+              tooltip="Site Theme"
+            />
           </FloatLabel>
         </div>
         <div className="col-2 align-items-center">
           <div className="flex justify-content-start align-items-center flex-wrap">
             <div>
-              <Checkbox inputId="saveThemeId" value={true} checked={saveTheme} onClick={() => saveThemeFunction()} tooltip="Save Theme Selection" />
+              <Checkbox
+                inputId="saveThemeId"
+                value={true}
+                checked={saveTheme}
+                onClick={() => saveThemeFunction()}
+                tooltip="Save Theme Selection"
+              />
             </div>
             <div className="p-1">
-              <label htmlFor="saveThemeId" >{saveMsg}</label>
+              <label htmlFor="saveThemeId">{saveMsg}</label>
             </div>
           </div>
         </div>

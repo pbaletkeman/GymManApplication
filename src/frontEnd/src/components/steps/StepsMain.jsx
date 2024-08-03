@@ -1,4 +1,5 @@
 import { PropTypes } from "prop-types";
+import ListAllSteps from "./List";
 
 function CreateStep({ exerciseId }) {
     return (<div>Create Step {exerciseId}</div>);
@@ -9,14 +10,20 @@ function UpdateStep({ stepId, exerciseId }) {
 }
 
 function ListSteps({ exerciseId }) {
-    return (<div>List Steps {exerciseId}</div>);
+    return (
+        <div>
+            List Steps {exerciseId}
+            <ListAllSteps />
+        </div>);
+
+
 }
 
 function SingleStep({ stepId, exerciseId }) {
     return (<div>Single Step {stepId} {exerciseId}</div>);
 }
 
-export function Steps() {
+export function StepsMain() {
     return (<>
         <CreateStep exerciseId={0} />
         <UpdateStep exerciseId={0} stepId={0} />
