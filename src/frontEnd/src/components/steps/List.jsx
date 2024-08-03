@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { PropTypes } from "prop-types";
+import { useState, useEffect, useRef } from "react";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -6,6 +7,9 @@ import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { Button } from "primereact/button";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+
 import { StepService } from "./Service/StepService";
 
 export default function ListAllSteps() {
@@ -103,15 +107,73 @@ export default function ListAllSteps() {
       return "error";
     }
   }
+  const toast = useRef(null);
+
+  const accept = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Confirmed",
+      detail: "You have accepted",
+      life: 3000,
+    });
+  };
+
+  const reject = () => {
+    toast.current.show({
+      severity: "warn",
+      summary: "Rejected",
+      detail: "You have rejected",
+      life: 3000,
+    });
+  };
+
+  const confirmDelete = (recordCount) => {
+    confirmDialog({
+      message: "Do you want to delete this " + recordCount + " record(s)?",
+      header: "Delete Confirmation",
+      icon: "pi pi-info-circle",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-danger",
+      accept,
+      reject,
+    });
+  };
+
+  function DeleteButton({ selectedLength }) {
+    if (selectedLength && selectedLength.length && selectedLength.length > 0) {
+      return (
+        <>
+          <Toast ref={toast} />
+          <ConfirmDialog />
+          <Button
+            label="Delete"
+            className="text-xs bg-red-500 border-round-1g border-white border-1 text-white"
+            onClick={() => confirmDelete(selectedLength.length)}
+            icon="pi pi-times"
+          />
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  }
+
+  DeleteButton.propTypes = {
+    selectedLength: PropTypes.array,
+  };
 
   const paginatorLeft = (selectedLength, totalLength) => {
     return (
-      <div className="text-xs">
-        <GetSelectedCount
-          selectedLength={selectedLength}
-          totalLength={totalLength}
-        />
-        <p>Delete Selected</p>
+      <div className="grid align-items-center">
+        <div className="text-xs col">
+          <GetSelectedCount
+            selectedLength={selectedLength}
+            totalLength={totalLength}
+          />
+        </div>
+        <div className="col">
+          <DeleteButton selectedLength={selectedLength} />
+        </div>
       </div>
     );
   };
