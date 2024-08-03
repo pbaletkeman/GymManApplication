@@ -183,6 +183,15 @@ export default function ListAllSteps() {
     return <div></div>;
   };
 
+  const editTemplate = (step) => {
+    return (
+      <>
+        <a href="https://google.com">Edit</a>
+        {step.id}
+      </>
+    );
+  };
+
   return (
     <div className="card">
       <DataTable
@@ -212,6 +221,10 @@ export default function ListAllSteps() {
       >
         <Column
           selectionMode="multiple"
+          headerStyle={{ width: "3rem" }}
+        ></Column>
+        <Column
+          body={editTemplate}
           headerStyle={{ width: "3rem" }}
         ></Column>
         <Column
