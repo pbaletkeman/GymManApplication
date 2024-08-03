@@ -92,6 +92,35 @@ export default function ListAllSteps() {
 
   const header = renderHeader();
 
+  function GetSelectedCount({ selectedLength, totalLength }) {
+    if (totalLength && totalLength.length) {
+      if (selectedLength && selectedLength.length) {
+        return selectedLength.length + "/" + totalLength.length;
+      } else {
+        return "0/" + totalLength.length;
+      }
+    } else {
+      return "error";
+    }
+  }
+
+  const paginatorLeft = (selectedLength, totalLength) => {
+    return (
+      <div className="text-xs">
+        <GetSelectedCount
+          selectedLength={selectedLength}
+          totalLength={totalLength}
+        />
+        <p>Delete Selected</p>
+      </div>
+    );
+  };
+
+  const paginatorRight = () => {
+    // empty element so that layout is balanced, otherwise things are not centered
+    return <div></div>;
+  };
+
   return (
     <div className="card">
       <DataTable
@@ -108,6 +137,8 @@ export default function ListAllSteps() {
         rows={10}
         rowsPerPageOptions={[10, 25, 50]}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        paginatorLeft={() => paginatorLeft(selectedProducts, steps)}
+        paginatorRight={() => paginatorRight(selectedProducts, steps)}
         emptyMessage="No steps found."
         selectionMode="checkbox"
         selection={selectedProducts}
@@ -115,6 +146,7 @@ export default function ListAllSteps() {
         scrollable
         scrollHeight="400px"
         className="mt-4"
+        style={{ background: "blue" }}
       >
         <Column
           selectionMode="multiple"
