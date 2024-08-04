@@ -185,10 +185,11 @@ export default function ListAllSteps() {
 
   const editTemplate = (step) => {
     return (
-      <>
-        <a href="https://google.com">Edit</a>
-        {step.id}
-      </>
+      <Button
+        label="Edit"
+        className="text-xs border-round-1g"
+        onClick={() => console.log(JSON.stringify(step))}
+      />
     );
   };
 
