@@ -19,6 +19,7 @@ export default function ListAllSteps() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [selectedProducts, setSelectedProducts] = useState(null);
+  const [fromAPI, setFromAPI] = useState(false);
 
   const [showEdit, setShowEdit] = useState(false);
   const [editStep, setEditStep] = useState(null);
@@ -278,6 +279,7 @@ export default function ListAllSteps() {
         step={editStep}
         visible={showEdit}
         setVisible={setShowEdit}
+        fromAPI={fromAPI}
       />
       ;
     </div>

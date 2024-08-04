@@ -1,29 +1,58 @@
 import { PropTypes } from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
 
-export function EditDialog({ step, visible, setVisible }) {
+export function EditDialog({ step, visible, setVisible, fromAPI }) {
   const [headerTitle, setHeaderTitle] = useState("");
+  const toast = useRef(null);
 
-  useEffect(() => {
-    if (step && step.name) {
-      setHeaderTitle(step.name);
-    }
-  }, [setHeaderTitle, step]);
+  const saveStep = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Info",
+      detail: "Saving Record",
+    });
+  };
+
+  useEffect(
+    (fromAPI) => {
+      if (fromAPI) {
+        // do data fect here
+        console.log("from API");
+      } else {
+        console.log("from memory");
+      }
+      if (step && step.name) {
+        setHeaderTitle(step.name);
+      }
+    },
+    [fromAPI, setHeaderTitle, step]
+  );
+
+  function saveRecord(step) {
+    setVisible(false);
+    console.log(JSON.stringify(step));
+    saveStep();
+  }
+
+  function cancelEdit() {
+    setVisible(false);
+  }
 
   const footerContent = (
     <div>
       <Button
         label="No"
         icon="pi pi-times"
-        onClick={() => setVisible(false)}
+        onClick={() => cancelEdit()}
         className="p-button-text"
       />
       <Button
         label="Yes"
         icon="pi pi-check"
-        onClick={() => setVisible(false)}
+        onClick={() => saveRecord(step)}
         autoFocus
       />
     </div>
@@ -36,6 +65,7 @@ export function EditDialog({ step, visible, setVisible }) {
   }
   return (
     <div className="card flex justify-content-center">
+      <Toast ref={toast} />
       <Dialog
         header={headerContent}
         visible={visible}
@@ -73,4 +103,5 @@ EditDialog.propTypes = {
   step: PropTypes.object,
   visible: PropTypes.bool,
   setVisible: PropTypes.func,
+  fromAPI: PropTypes.bool,
 };
