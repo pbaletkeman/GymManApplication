@@ -11,6 +11,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 
 import { StepService } from "./Service/StepService";
+import { EditDialog } from "./EditDialog";
 
 export default function ListAllSteps() {
   const [steps, setSteps] = useState(null);
@@ -18,6 +19,9 @@ export default function ListAllSteps() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [selectedProducts, setSelectedProducts] = useState(null);
+
+  const [showEdit, setShowEdit] = useState(false);
+  const [editStep, setEditStep] = useState(null);
 
   useEffect(() => {
     StepService.getStepsMedium().then((data) => {
@@ -183,12 +187,17 @@ export default function ListAllSteps() {
     return <div></div>;
   };
 
+  function showEditDialog(step) {
+    setEditStep(step);
+    setShowEdit(true);
+  }
+
   const editTemplate = (step) => {
     return (
       <Button
         label="Edit"
         className="text-xs border-round-1g"
-        onClick={() => console.log(JSON.stringify(step))}
+        onClick={() => showEditDialog(step)}
       />
     );
   };
@@ -265,6 +274,12 @@ export default function ListAllSteps() {
           frozen
         />
       </DataTable>
+      <EditDialog
+        step={editStep}
+        visible={showEdit}
+        setVisible={setShowEdit}
+      />
+      ;
     </div>
   );
 }
