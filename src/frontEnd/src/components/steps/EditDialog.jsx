@@ -1,11 +1,21 @@
 import { PropTypes } from "prop-types";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Toast } from "primereact/toast";
+import { StepSingleService } from "./Service/StepSingleService";
 
 export function EditDialog({ step, visible, setVisible, fromAPI }) {
-  const [headerTitle, setHeaderTitle] = useState("");
+  let currentStep;
+  if (fromAPI) {
+    // do data fetch here
+    if (step && step.id) {
+      currentStep = StepSingleService.getData(step.id);
+    }
+  } else {
+    currentStep = step;
+  }
+
   const toast = useRef(null);
 
   const saveStep = () => {
@@ -15,21 +25,6 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
       detail: "Saving Record",
     });
   };
-
-  useEffect(
-    (fromAPI) => {
-      if (fromAPI) {
-        // do data fect here
-        console.log("from API");
-      } else {
-        console.log("from memory");
-      }
-      if (step && step.name) {
-        setHeaderTitle(step.name);
-      }
-    },
-    [fromAPI, setHeaderTitle, step]
-  );
 
   function saveRecord(step) {
     setVisible(false);
@@ -58,11 +53,12 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
     </div>
   );
 
-  const headerContent = <div> {headerTitle} </div>;
+  const headerContent = currentStep ? <div> {currentStep.name} </div> : "";
 
   if (!step) {
     return <div></div>;
   }
+
   return (
     <div className="card flex justify-content-center">
       <Toast ref={toast} />

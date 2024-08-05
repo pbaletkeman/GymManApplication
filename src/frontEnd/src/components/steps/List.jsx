@@ -19,7 +19,7 @@ export default function ListAllSteps() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [selectedProducts, setSelectedProducts] = useState(null);
-  const [fromAPI, setFromAPI] = useState(false);
+  const [fromAPI, setFromAPI] = useState(true);
 
   const [showEdit, setShowEdit] = useState(false);
   const [editStep, setEditStep] = useState(null);
@@ -34,7 +34,7 @@ export default function ListAllSteps() {
 
   const getSteps = (data) => {
     return [...(data || [])].map((d) => {
-      d.date = new Date(d.date);
+      // d.date = new Date(d.date);
 
       return d;
     });
