@@ -281,7 +281,6 @@ export default function ListAllSteps() {
         setVisible={setShowEdit}
         fromAPI={fromAPI}
       />
-      ;
     </div>
   );
 }
