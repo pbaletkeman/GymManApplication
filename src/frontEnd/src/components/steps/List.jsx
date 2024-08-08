@@ -1,5 +1,7 @@
 import { PropTypes } from "prop-types";
 import { useState, useEffect, useRef } from "react";
+import { useReducer } from "react";
+
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -14,19 +16,20 @@ import { StepService } from "./Service/StepService";
 import { EditDialog } from "./EditDialog";
 
 export default function ListAllSteps() {
-  const [steps, setSteps] = useState(null);
+  const [stepData, setStepData] = useState(null);
   const [filters, setFilters] = useState(null);
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [fromAPI, setFromAPI] = useState(true);
+  // const [steps, dispatch] = useReducer(stepsReducer, null);
 
   const [showEdit, setShowEdit] = useState(false);
   const [editStep, setEditStep] = useState(null);
 
   useEffect(() => {
     StepService.getStepsMedium().then((data) => {
-      setSteps(getSteps(data));
+      setStepData(getSteps(data));
       setLoading(false);
     });
     initFilters();
@@ -206,7 +209,7 @@ export default function ListAllSteps() {
   return (
     <div className="card">
       <DataTable
-        value={steps}
+        value={stepData}
         showGridlines
         stripedRows
         size={"small"}
@@ -219,8 +222,8 @@ export default function ListAllSteps() {
         rows={10}
         rowsPerPageOptions={[10, 25, 50]}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        paginatorLeft={() => paginatorLeft(selectedProducts, steps)}
-        paginatorRight={() => paginatorRight(selectedProducts, steps)}
+        paginatorLeft={() => paginatorLeft(selectedProducts, stepData)}
+        paginatorRight={() => paginatorRight(selectedProducts, stepData)}
         emptyMessage="No steps found."
         selectionMode="checkbox"
         selection={selectedProducts}

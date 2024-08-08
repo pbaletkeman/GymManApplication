@@ -10,11 +10,14 @@ import { InputNumber } from "primereact/inputnumber";
 
 import { StepSingleService } from "./Service/StepSingleService";
 
+import StepReducer from "./../../reducer/stepReducer.js";
+
 export function EditDialog({ step, visible, setVisible, fromAPI }) {
   const toast = useRef(null);
 
   let currentStep;
   if (fromAPI) {
+    // do data fetch here
     // do data fetch here
     if (step && step.id) {
       currentStep = StepSingleService.getData(step.id);
@@ -30,6 +33,7 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
   const [description, setDescription] = useState(
     currentStep && currentStep.description
   );
+  const [activeStep, setActiveStep] = useState(currentStep);
 
   useEffect(() => {
     if (currentStep && currentStep.name) {
@@ -41,40 +45,58 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
     if (currentStep && currentStep.description) {
       setDescription(currentStep.description);
     }
-  }, [setName, currentStep]);
+  }, [setName, setStepNum, setDescription, currentStep]);
 
   function handleChange(value, target) {
+    const item = currentStep;
     switch (target) {
       case "name":
         setName(value);
+        item.name = value;
         break;
       case "stepNum":
         setStepNum(value);
+        item.stepNum = value;
         break;
       case "description":
         setDescription(value);
+        item.description = value;
         break;
       default:
         throw new Error("Invalid Step  > HandleChange > Option");
     }
+    setActiveStep(item);
+    console.log("handleChange");
+    console.log(item);
   }
 
-  const saveStep = () => {
+  function destroyStep() {
+    setActiveStep({});
+  }
+
+  function saveRecord() {
+    setVisible(false);
+    if (
+      activeStep.name === activeStep.description &&
+      activeStep.description === activeStep.stepNum
+    ) {
+      console.log("no changes");
+      return;
+    }
+
+    StepReducer(activeStep, "action");
     toast.current.show({
       severity: "info",
       summary: "Info",
       detail: "Saving Record",
     });
-  };
-
-  function saveRecord(step) {
-    setVisible(false);
-    console.log(JSON.stringify(step));
-    saveStep();
+    console.log(JSON.stringify(activeStep));
+    destroyStep();
   }
 
   function cancelEdit() {
     setVisible(false);
+    destroyStep();
   }
 
   if (currentStep) {
@@ -89,7 +111,7 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
         <Button
           label="Save"
           icon="pi pi-check"
-          onClick={() => saveRecord(step)}
+          onClick={() => saveRecord()}
           autoFocus
         />
       </div>
