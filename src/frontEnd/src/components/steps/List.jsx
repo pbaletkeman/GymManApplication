@@ -104,12 +104,12 @@ export default function ListAllSteps() {
 
   const header = renderHeader();
 
-  function GetSelectedCount({ selectedLength, totalLength }) {
-    if (totalLength && totalLength.length) {
-      if (selectedLength && selectedLength.length) {
-        return selectedLength.length + "/" + totalLength.length;
+  function GetSelectedCount({ selectedItems, allItems }) {
+    if (allItems && allItems.length) {
+      if (selectedItems && selectedItems.length) {
+        return selectedItems.length + "/" + allItems.length;
       } else {
-        return "0/" + totalLength.length;
+        return "0/" + allItems.length;
       }
     } else {
       return "error";
@@ -147,8 +147,8 @@ export default function ListAllSteps() {
     });
   };
 
-  function DeleteButton({ selectedLength }) {
-    if (selectedLength && selectedLength.length && selectedLength.length > 0) {
+  function DeleteButton({ selectedItems }) {
+    if (selectedItems && selectedItems.length && selectedItems.length > 0) {
       return (
         <>
           <Toast ref={toast} />
@@ -156,7 +156,7 @@ export default function ListAllSteps() {
           <Button
             label="Delete"
             className="text-xs bg-red-500 border-round-1g border-white border-1 text-white"
-            onClick={() => confirmDelete(selectedLength.length)}
+            onClick={() => confirmDelete(selectedItems.length)}
             icon="pi pi-times"
           />
         </>
@@ -167,28 +167,42 @@ export default function ListAllSteps() {
   }
 
   DeleteButton.propTypes = {
-    selectedLength: PropTypes.array,
+    selectedItems: PropTypes.array,
   };
 
-  const paginatorLeft = (selectedLength, totalLength) => {
+  const paginatorLeft = (selectedItems, allItems) => {
     return (
       <div className="grid align-items-center">
         <div className="text-xs col">
           <GetSelectedCount
-            selectedLength={selectedLength}
-            totalLength={totalLength}
+            selectedItems={selectedItems}
+            allItems={allItems}
           />
         </div>
         <div className="col">
-          <DeleteButton selectedLength={selectedLength} />
+          <DeleteButton selectedItems={selectedItems} />
         </div>
       </div>
     );
   };
 
-  const paginatorRight = () => {
+  const paginatorRight = (selectedProducts) => {
     // empty element so that layout is balanced, otherwise things are not centered
-    return <div></div>;
+    if (selectedProducts && selectedProducts.length > 0) {
+      return (
+        <div className="grid">
+          <div className="col">
+            <Button
+              label="Delete"
+              className="text-xs surface-50 border-none text-50"
+              icon="pi pi-times"
+            />
+          </div>
+        </div>
+      );
+    } else {
+      return <div></div>;
+    }
   };
 
   function showEditDialog(step) {
@@ -223,7 +237,7 @@ export default function ListAllSteps() {
         rowsPerPageOptions={[10, 25, 50]}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         paginatorLeft={() => paginatorLeft(selectedProducts, stepData)}
-        paginatorRight={() => paginatorRight(selectedProducts, stepData)}
+        paginatorRight={() => paginatorRight(selectedProducts)}
         emptyMessage="No steps found."
         selectionMode="checkbox"
         selection={selectedProducts}
