@@ -194,7 +194,7 @@ export default function ListAllSteps() {
           <div className="col">
             <Button
               label="Delete"
-              className="text-xs surface-50 border-none text-50"
+              className="text-xs surface-50 border-none text-50 cursor-auto"
               icon="pi pi-times"
             />
           </div>
