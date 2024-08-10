@@ -13,7 +13,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 
 import { StepService } from "./Service/StepService";
-import { EditDialog } from "./EditDialog";
+import { StepDialog } from "./StepDialog";
 
 export default function ListAllSteps() {
   const [stepData, setStepData] = useState(null);
@@ -194,14 +194,14 @@ export default function ListAllSteps() {
             label="New"
             className="text-xs bg-primary"
             icon="pi pi-plus"
-            onClick={() => showEditDialog(null)}
+            onClick={() => showStepDialog(null)}
           />
         </div>
       </div>
     );
   };
 
-  function showEditDialog(step) {
+  function showStepDialog(step) {
     setEditStep(step);
     setShowEdit(true);
   }
@@ -211,7 +211,7 @@ export default function ListAllSteps() {
       <Button
         label="Edit"
         className="text-xs border-round-1g"
-        onClick={() => showEditDialog(step)}
+        onClick={() => showStepDialog(step)}
       />
     );
   };
@@ -288,7 +288,7 @@ export default function ListAllSteps() {
           frozen
         />
       </DataTable>
-      <EditDialog
+      <StepDialog
         step={editStep}
         visible={showEdit}
         setVisible={setShowEdit}

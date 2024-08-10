@@ -8,11 +8,11 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 
-import { StepSingleService } from "./Service/StepSingleService";
+import { StepSingleService } from "./Service/StepSingleService.jsx";
 
-import StepReducer from "./../../reducer/stepReducer.js";
+import StepReducer from "../../reducer/stepReducer.js";
 
-export function EditDialog({ step, visible, setVisible, fromAPI }) {
+export function StepDialog({ step, visible, setVisible, fromAPI }) {
   const toast = useRef(null);
 
   let currentStep;
@@ -107,16 +107,6 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
 
   function saveRecord() {
     setVisible(false);
-    // console.log("A");
-    // console.log(activeStep);
-    // console.log("B");
-    // console.log(activeStep.name);
-    // console.log("C");
-    // console.log(activeStep.description);
-    // console.log("D");
-    // console.log(activeStep.id);
-    // console.log("E");
-    // console.log(activeStep.stepNum);
     if (activeStep) {
       console.log("activeStep");
       console.log(activeStep);
@@ -175,44 +165,44 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
           }}
           footer={footerContent}
         >
-          <div className="grid justify-content-center">
+          <div className="grid mt-2 align-items-center ">
             <div className="col-2">
               <label htmlFor="name">Name</label>
             </div>
-            <div className="col-3">
+            <div className="col-6">
               <InputText
                 id="name"
                 value={name}
                 onChange={(e) => handleChange(e.target.value, "name")}
                 className="p-inputtext-sm"
-                size={15}
+                size={38}
               />
             </div>
-            <div className="col-2">
+            <div className="col-1">
               <label htmlFor="stepNum">Step</label>
             </div>
-            <div className="col-3">
+            <div className="col-3 pl-5">
               <InputNumber
                 minFractionDigits={0}
                 id="stepNum"
                 value={stepNum}
                 onValueChange={(e) => handleChange(e.target.value, "stepNum")}
                 className="p-inputtext-sm"
-                size={15}
+                size={2}
                 showButtons
                 min={0}
                 max={100}
               />
             </div>
           </div>
-          <div className="grid justify-content-center">
+          <div className="grid mt-2">
             <div className="col-2">
               <label htmlFor="description">Description</label>
             </div>
-            <div className="col-8">
+            <div className="col-10">
               <InputTextarea
                 rows={5}
-                cols={52}
+                cols={66}
                 id="description"
                 value={description}
                 onChange={(e) => handleChange(e.target.value, "description")}
@@ -227,7 +217,7 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
   }
 }
 
-EditDialog.propTypes = {
+StepDialog.propTypes = {
   step: PropTypes.object,
   visible: PropTypes.bool,
   setVisible: PropTypes.func,
