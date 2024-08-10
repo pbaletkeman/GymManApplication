@@ -186,23 +186,19 @@ export default function ListAllSteps() {
     );
   };
 
-  const paginatorRight = (selectedProducts) => {
-    // empty element so that layout is balanced, otherwise things are not centered
-    if (selectedProducts && selectedProducts.length > 0) {
-      return (
-        <div className="grid">
-          <div className="col">
-            <Button
-              label="Delete"
-              className="text-xs surface-50 border-none text-50 cursor-auto"
-              icon="pi pi-times"
-            />
-          </div>
+  const paginatorRight = () => {
+    return (
+      <div className="grid">
+        <div className="col">
+          <Button
+            label="New"
+            className="text-xs bg-primary"
+            icon="pi pi-plus"
+            onClick={() => showEditDialog(null)}
+          />
         </div>
-      );
-    } else {
-      return <div></div>;
-    }
+      </div>
+    );
   };
 
   function showEditDialog(step) {
@@ -237,7 +233,7 @@ export default function ListAllSteps() {
         rowsPerPageOptions={[10, 25, 50]}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         paginatorLeft={() => paginatorLeft(selectedProducts, stepData)}
-        paginatorRight={() => paginatorRight(selectedProducts)}
+        paginatorRight={() => paginatorRight()}
         emptyMessage="No steps found."
         selectionMode="checkbox"
         selection={selectedProducts}

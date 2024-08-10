@@ -18,7 +18,6 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
   let currentStep;
   if (fromAPI) {
     // do data fetch here
-    // do data fetch here
     if (step && step.id) {
       currentStep = StepSingleService.getData(step.id);
     } else {
@@ -30,6 +29,7 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
 
   const [name, setName] = useState(currentStep && currentStep.name);
   const [stepNum, setStepNum] = useState(currentStep && currentStep.stepNum);
+  const [stepId, setStepId] = useState(currentStep && currentStep.id);
   const [description, setDescription] = useState(
     currentStep && currentStep.description
   );
@@ -45,10 +45,27 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
     if (currentStep && currentStep.description) {
       setDescription(currentStep.description);
     }
-  }, [setName, setStepNum, setDescription, currentStep]);
+    if (currentStep && currentStep.id) {
+      setStepId(currentStep.id);
+    }
+  }, [setName, setStepNum, setDescription, setStepId, currentStep]);
 
   function handleChange(value, target) {
     const item = currentStep;
+    if (item) {
+      if (!item.name) {
+        item["name"] = activeStep["name"];
+      }
+      if (!item.stepNum) {
+        item["stepNum"] = activeStep["stepNum"];
+      }
+      if (!item.description) {
+        item["description"] = activeStep["description"];
+      }
+      if (!item.id) {
+        item["id"] = activeStep["id"];
+      }
+    }
     switch (target) {
       case "name":
         setName(value);
@@ -71,17 +88,38 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
   }
 
   function destroyStep() {
-    setActiveStep({});
+    if (activeStep) {
+      setActiveStep({});
+    }
+    if (name) {
+      setName("");
+    }
+    if (description) {
+      setDescription("");
+    }
+    if (stepNum) {
+      setStepNum(0);
+    }
+    if (stepId) {
+      setStepId(-1);
+    }
   }
 
   function saveRecord() {
     setVisible(false);
-    if (
-      activeStep.name === activeStep.description &&
-      activeStep.description === activeStep.stepNum
-    ) {
-      console.log("no changes");
-      return;
+    // console.log("A");
+    // console.log(activeStep);
+    // console.log("B");
+    // console.log(activeStep.name);
+    // console.log("C");
+    // console.log(activeStep.description);
+    // console.log("D");
+    // console.log(activeStep.id);
+    // console.log("E");
+    // console.log(activeStep.stepNum);
+    if (activeStep) {
+      console.log("activeStep");
+      console.log(activeStep);
     }
 
     StepReducer(activeStep, "action");
@@ -116,17 +154,24 @@ export function EditDialog({ step, visible, setVisible, fromAPI }) {
         />
       </div>
     );
-
+    let title = "New Item ";
+    if (name) {
+      title += " - '" + name + "'";
+    }
+    if (step && step.id) {
+      title = "Edit '" + name + "'";
+    }
     return (
       <div className="card flex justify-content-center">
         <Toast ref={toast} />
         <Dialog
-          header={name}
+          header={title}
           visible={visible}
           style={{ width: "40vw" }}
           onHide={() => {
             if (!visible) return;
             setVisible(false);
+            destroyStep();
           }}
           footer={footerContent}
         >

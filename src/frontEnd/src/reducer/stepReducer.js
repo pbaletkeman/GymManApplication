@@ -1,7 +1,7 @@
 export default function StepReducer(steps, action) {
   console.log("reducer");
-  console.log(steps);
-  console.log(action);
+  // console.log(steps);
+  // console.log(action);
   return;
   /*
   switch (action.type) {
