@@ -4,6 +4,7 @@ import { Column } from "primereact/column";
 import { ExerciseService } from "./Service/ProductService";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
+import { Tooltip } from "primereact/tooltip";
 
 export function ListExercise() {
   const [exercises, setExercises] = useState([]);
@@ -54,27 +55,69 @@ export function ListExercise() {
     return formatCurrency(rowData.stepNum);
   };
 
-  const searchBodyTemplate = () => {
-    return <Button icon="pi pi-search" />;
-  };
-
   const priceBodyTemplate = (rowData) => {
-    return rowData.name;
+    const toolClass = "exercise" + rowData.id;
+    return (
+      <>
+        <Tooltip target={"." + toolClass} />
+        <p
+          className={toolClass}
+          data-pr-tooltip={rowData.description}
+          data-pr-position="left"
+          data-pr-at="right-250 top"
+          data-pr-my="left center-2"
+        >
+          {rowData.name}
+        </p>
+      </>
+    );
   };
 
   const allowExpansion = (rowData) => {
     return rowData.steps.length > 0;
   };
 
+  const stepEditTemplateBody = (rowData) => {
+    return (
+      <Button
+        icon="pi pi-pencil"
+        onClick={() => console.log(rowData.id)}
+        outlined
+        raised
+        size="small"
+        className="p-2 border-3"
+      >
+        Edit
+      </Button>
+    );
+  };
+
+  const exerciseEditTemplateBody = (rowData) => {
+    return (
+      <Button
+        icon="pi pi-pencil"
+        onClick={() => console.log(rowData.id)}
+        rounded
+        raised
+        className="p-2 border-3 border-white"
+        tooltip={rowData.description}
+      >
+        Edit
+      </Button>
+    );
+  };
+
   const rowExpansionTemplate = (data) => {
     return (
       <div className="p-3">
         <h5>Steps for {data.name}</h5>
+        <h5>{data.description}</h5>
         <DataTable value={data.steps}>
           <Column
             field="id"
             header="Id"
             sortable
+            body={stepEditTemplateBody}
           ></Column>
           <Column
             field="name"
@@ -91,10 +134,6 @@ export function ListExercise() {
             field="description"
             header="Description"
             sortable
-          ></Column>
-          <Column
-            headerStyle={{ width: "4rem" }}
-            body={searchBodyTemplate}
           ></Column>
         </DataTable>
       </div>
@@ -139,6 +178,7 @@ export function ListExercise() {
         <Column
           field="id"
           header="id"
+          body={exerciseEditTemplateBody}
           sortable
         />
         <Column
@@ -146,11 +186,6 @@ export function ListExercise() {
           header="Name"
           sortable
           body={priceBodyTemplate}
-        />
-        <Column
-          field="description"
-          header="Description"
-          sortable
         />
       </DataTable>
     </div>
