@@ -5,11 +5,16 @@ import { ExerciseService } from "./Service/ProductService";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
+import { ExerciseDialog } from "./ExerciseDialog";
 
 export function ListExercise() {
-  const [exercises, setExercises] = useState([]);
-  const [expandedRows, setExpandedRows] = useState(null);
   const toast = useRef(null);
+
+  const [expandedRows, setExpandedRows] = useState(null);
+
+  const [exercises, setExercises] = useState([]);
+  const [visibleExercise, setVisibleExercise] = useState(false);
+  const [currentEx, setCurrentEx] = useState({});
 
   useEffect(() => {
     ExerciseService.getExercisesWithStepsSmall().then((data) =>
@@ -51,11 +56,11 @@ export function ListExercise() {
     return value;
   };
 
-  const amountBodyTemplate = (rowData) => {
+  const stepNumBodyTemplate = (rowData) => {
     return formatCurrency(rowData.stepNum);
   };
 
-  const priceBodyTemplate = (rowData) => {
+  const exerciseNameBodyTemplate = (rowData) => {
     const toolClass = "exercise" + rowData.id;
     return (
       <>
@@ -81,7 +86,7 @@ export function ListExercise() {
     return (
       <Button
         icon="pi pi-pencil"
-        onClick={() => console.log(rowData.id)}
+        onClick={() => console.log("Step " + rowData.id)}
         outlined
         raised
         size="small"
@@ -92,11 +97,20 @@ export function ListExercise() {
     );
   };
 
-  const exerciseEditTemplateBody = (rowData) => {
+  function loadExercise(rowData) {
+    // copy the element
+    let x = structuredClone(rowData);
+    // remove the steps property, not needed for editing exercises
+    delete x.steps;
+    setVisibleExercise(true);
+    setCurrentEx(x);
+  }
+
+  const exerciseBodyEditTemplate = (rowData) => {
     return (
       <Button
         icon="pi pi-pencil"
-        onClick={() => console.log(rowData.id)}
+        onClick={() => loadExercise(rowData)}
         rounded
         raised
         className="p-2 border-3 border-white"
@@ -127,7 +141,7 @@ export function ListExercise() {
           <Column
             field="stepNum"
             header="Step #"
-            body={amountBodyTemplate}
+            body={stepNumBodyTemplate}
             sortable
           ></Column>
           <Column
@@ -141,19 +155,24 @@ export function ListExercise() {
   };
 
   const header = (
-    <div className="flex flex-wrap justify-content-end gap-2">
-      <Button
-        icon="pi pi-plus"
-        label="Expand All"
-        onClick={expandAll}
-        text
-      />
-      <Button
-        icon="pi pi-minus"
-        label="Collapse All"
-        onClick={collapseAll}
-        text
-      />
+    <div className="grid ">
+      <div className="col-2 ">
+        <Button label="New Exercise" />
+      </div>
+      <div className="col-10 flex justify-content-end align-items-center">
+        <Button
+          icon="pi pi-plus"
+          label="Expand All"
+          onClick={expandAll}
+          text
+        />
+        <Button
+          icon="pi pi-minus"
+          label="Collapse All"
+          onClick={collapseAll}
+          text
+        />
+      </div>
     </div>
   );
 
@@ -178,16 +197,22 @@ export function ListExercise() {
         <Column
           field="id"
           header="id"
-          body={exerciseEditTemplateBody}
+          body={exerciseBodyEditTemplate}
           sortable
         />
         <Column
           field="name"
           header="Name"
           sortable
-          body={priceBodyTemplate}
+          body={exerciseNameBodyTemplate}
         />
       </DataTable>
+
+      <ExerciseDialog
+        exercise={currentEx}
+        visible={visibleExercise}
+        setVisible={setVisibleExercise}
+      />
     </div>
   );
 }
