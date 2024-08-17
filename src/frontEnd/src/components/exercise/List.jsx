@@ -5,6 +5,8 @@ import { ExerciseService } from "./Service/ProductService";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
+import { ConfirmDialog } from "primereact/confirmdialog";
+
 import { ExerciseDialog } from "./ExerciseDialog";
 
 export function ListExercise() {
@@ -15,6 +17,8 @@ export function ListExercise() {
   const [exercises, setExercises] = useState([]);
   const [visibleExercise, setVisibleExercise] = useState(false);
   const [currentEx, setCurrentEx] = useState({});
+  const [selectedExercises, setSelectedExercises] = useState(null);
+  const [selectedSteps, setSelectedSteps] = useState(null);
 
   useEffect(() => {
     ExerciseService.getExercisesWithStepsSmall().then((data) =>
@@ -121,12 +125,69 @@ export function ListExercise() {
     );
   };
 
+  const stepAddBodyTemplate = (rowData) => {
+    return (
+      <Button
+        icon="pi pi-plus"
+        onClick={() => loadExercise(rowData)}
+        rounded
+        raised
+        className="p-2 border-3 border-white"
+      >
+        Add Step
+      </Button>
+    );
+  };
+
+  const deleteTemplate = (selected, bgColor) => {
+    if (selected && selected.length > 0) {
+      return (
+        <Button
+          icon="pi pi-times"
+          onClick={() => confirmDelete(selected.length)}
+          className="p-2 border-white-alpha-20 text-color bg-red-800"
+        >
+          &nbsp;Delete Selected
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          className={"p-2 border-none text-color " + bgColor + " cursor-auto	"}
+        >
+          &nbsp;
+        </Button>
+      );
+    }
+  };
+
+  const tallyTemplate = (selected, total, bgColor) => {
+    return (
+      <Button
+        className={"p-2 border-none text-color " + bgColor + " cursor-auto	"}
+      >
+        {selected ? selected.length : 0} / {total ? total.length : 0} selected
+      </Button>
+    );
+  };
+
   const rowExpansionTemplate = (data) => {
+    console.log("setSelectedSteps");
+    console.log(selectedSteps);
     return (
       <div className="p-3">
         <h5>Steps for {data.name}</h5>
         <h5>{data.description}</h5>
-        <DataTable value={data.steps}>
+        <DataTable
+          value={data.steps}
+          selectionMode={"checkbox"}
+          selection={selectedSteps}
+          onSelectionChange={(e) => setSelectedSteps(e.value)}
+        >
+          <Column
+            selectionMode="multiple"
+            headerStyle={{ width: "3rem" }}
+          ></Column>
           <Column
             field="id"
             header="Id"
@@ -150,13 +211,17 @@ export function ListExercise() {
             sortable
           ></Column>
         </DataTable>
+        <div className="flex justify-content-start flex-wrap align-items-center gap-2 pt-4">
+          {tallyTemplate(selectedSteps, data.steps, "surface-50")}
+          {deleteTemplate(selectedSteps, "surface-50")}
+        </div>
       </div>
     );
   };
 
   const header = (
-    <div className="grid ">
-      <div className="col-2 ">
+    <div className="grid">
+      <div className="col-2">
         <Button label="New Exercise" />
       </div>
       <div className="col-10 flex justify-content-end align-items-center">
@@ -176,6 +241,37 @@ export function ListExercise() {
     </div>
   );
 
+  const accept = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Confirmed",
+      detail: "You have accepted",
+      life: 3000,
+    });
+  };
+
+  const reject = () => {
+    toast.current.show({
+      severity: "warn",
+      summary: "Rejected",
+      detail: "You have rejected",
+      life: 3000,
+    });
+  };
+
+  const confirmDelete = (recordCount) => {
+    let message = "Do you want to delete " + recordCount + " record(s)?";
+    confirmDialog({
+      message: message,
+      header: "Delete Confirmation",
+      icon: "pi pi-info-circle",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-danger",
+      accept,
+      reject,
+    });
+  };
+
   return (
     <div className="card">
       <Toast ref={toast} />
@@ -188,12 +284,20 @@ export function ListExercise() {
         rowExpansionTemplate={rowExpansionTemplate}
         dataKey="id"
         header={header}
+        selectionMode={"checkbox"}
+        selection={selectedExercises}
+        onSelectionChange={(e) => setSelectedExercises(e.value)}
         tableStyle={{ minWidth: "60rem" }}
       >
         <Column
           expander={allowExpansion}
           style={{ width: "5rem" }}
         />
+        <Column
+          selectionMode="multiple"
+          headerStyle={{ width: "3rem" }}
+        ></Column>
+
         <Column
           field="id"
           header="id"
@@ -206,13 +310,22 @@ export function ListExercise() {
           sortable
           body={exerciseNameBodyTemplate}
         />
+        <Column
+          style={{ width: "10rem" }}
+          body={stepAddBodyTemplate}
+        />
       </DataTable>
+      <div className="flex justify-content-start flex-wrap align-items-center gap-2 pt-4">
+        {tallyTemplate(selectedExercises, exercises, "surface-ground")}
+        {deleteTemplate(selectedExercises, "surface-ground")}
+      </div>
 
       <ExerciseDialog
         exercise={currentEx}
         visible={visibleExercise}
         setVisible={setVisibleExercise}
       />
+      <ConfirmDialog />
     </div>
   );
 }
