@@ -5,9 +5,10 @@ import { ExerciseService } from "./Service/ProductService";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
-import { ConfirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 import { ExerciseDialog } from "./ExerciseDialog";
+import { StepDialog } from "./StepDialog";
 
 export function ListExercise() {
   const toast = useRef(null);
@@ -16,7 +17,9 @@ export function ListExercise() {
 
   const [exercises, setExercises] = useState([]);
   const [visibleExercise, setVisibleExercise] = useState(false);
+  const [visibleStep, setVisibleStep] = useState(false);
   const [currentEx, setCurrentEx] = useState({});
+  const [currentStep, setCurrentStep] = useState({});
   const [selectedExercises, setSelectedExercises] = useState(null);
   const [selectedSteps, setSelectedSteps] = useState(null);
 
@@ -86,11 +89,18 @@ export function ListExercise() {
     return rowData.steps.length > 0;
   };
 
+  function loadStep(rowData) {
+    // copy the element
+    setVisibleStep(true);
+    setCurrentStep(rowData);
+  }
+
   const stepEditTemplateBody = (rowData) => {
     return (
       <Button
         icon="pi pi-pencil"
-        onClick={() => console.log("Step " + rowData.id)}
+        // onClick={() => console.log("Step " + rowData.id)}
+        onClick={() => loadStep(rowData)}
         outlined
         raised
         size="small"
@@ -125,11 +135,11 @@ export function ListExercise() {
     );
   };
 
-  const stepAddBodyTemplate = (rowData) => {
+  const stepAddBodyTemplate = () => {
     return (
       <Button
         icon="pi pi-plus"
-        onClick={() => loadExercise(rowData)}
+        onClick={() => loadStep({})}
         rounded
         raised
         className="p-2 border-3 border-white"
@@ -222,7 +232,13 @@ export function ListExercise() {
   const header = (
     <div className="grid">
       <div className="col-2">
-        <Button label="New Exercise" />
+        <Button
+          label="New Exercise"
+          onClick={() => loadExercise({})}
+          rounded
+          raised
+          className="p-2 border-3 border-white"
+        />
       </div>
       <div className="col-10 flex justify-content-end align-items-center">
         <Button
@@ -324,6 +340,11 @@ export function ListExercise() {
         exercise={currentEx}
         visible={visibleExercise}
         setVisible={setVisibleExercise}
+      />
+      <StepDialog
+        step={currentStep}
+        visible={visibleStep}
+        setVisible={setVisibleStep}
       />
       <ConfirmDialog />
     </div>

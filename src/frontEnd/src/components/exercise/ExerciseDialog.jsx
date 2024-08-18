@@ -50,6 +50,9 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
     setVisible(false);
   }
   function cancelEdit() {
+    setExerciseId(0);
+    setName("");
+    setDescription("");
     setVisible(false);
   }
 
@@ -97,6 +100,7 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             size={45}
+            className="p-inputtext-sm"
           />
         </div>
         <div>
@@ -106,6 +110,7 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             cols={47}
+            className="p-inputtext-sm"
           />
         </div>
       </Dialog>
