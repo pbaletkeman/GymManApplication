@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ExerciseService } from "./Service/ProductService";
@@ -10,12 +10,16 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ExerciseDialog } from "./ExerciseDialog";
 import { StepDialog } from "./StepDialog";
 
+import exercisesReducer from "./exercisesReducer.js";
+
 export function ListExercise() {
   const toast = useRef(null);
 
   const [expandedRows, setExpandedRows] = useState(null);
 
-  const [exercises, setExercises] = useState([]);
+  // const [exercises, setExercises] = useState([]);
+  const [exercises, dispatch] = useReducer(exercisesReducer, []);
+
   const [visibleExercise, setVisibleExercise] = useState(false);
   const [visibleStep, setVisibleStep] = useState(false);
   const [currentEx, setCurrentEx] = useState({});
@@ -23,130 +27,34 @@ export function ListExercise() {
   const [selectedExercises, setSelectedExercises] = useState(null);
   const [selectedSteps, setSelectedSteps] = useState(null);
 
-  useEffect(() => {
-    ExerciseService.getExercisesWithStepsSmall().then((data) =>
-      setExercises(data)
-    );
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const onRowExpand = (event) => {
+  const accept = () => {
     toast.current.show({
       severity: "info",
-      summary: "Exercise Expanded",
-      detail: event.data.name,
+      summary: "Confirmed",
+      detail: "You have accepted",
       life: 3000,
     });
-  };
-
-  const onRowCollapse = (event) => {
-    toast.current.show({
-      severity: "success",
-      summary: "Exercise Collapsed",
-      detail: event.data.name,
-      life: 3000,
-    });
-  };
-
-  const expandAll = () => {
-    let _expandedRows = {};
-
-    exercises.forEach((p) => (_expandedRows[`${p.id}`] = true));
-
-    setExpandedRows(_expandedRows);
-  };
-
-  const collapseAll = () => {
-    setExpandedRows(null);
-  };
-
-  const formatCurrency = (value) => {
-    return value;
-  };
-
-  const stepNumBodyTemplate = (rowData) => {
-    return formatCurrency(rowData.stepNum);
-  };
-
-  const exerciseNameBodyTemplate = (rowData) => {
-    const toolClass = "exercise" + rowData.id;
-    return (
-      <>
-        <Tooltip target={"." + toolClass} />
-        <p
-          className={toolClass}
-          data-pr-tooltip={rowData.description}
-          data-pr-position="left"
-          data-pr-at="right-250 top"
-          data-pr-my="left center-2"
-        >
-          {rowData.name}
-        </p>
-      </>
-    );
   };
 
   const allowExpansion = (rowData) => {
     return rowData.steps.length > 0;
   };
 
-  function loadStep(rowData) {
-    // copy the element
-    setVisibleStep(true);
-    setCurrentStep(rowData);
-  }
-
-  const stepEditTemplateBody = (rowData) => {
-    return (
-      <Button
-        icon="pi pi-pencil"
-        // onClick={() => console.log("Step " + rowData.id)}
-        onClick={() => loadStep(rowData)}
-        outlined
-        raised
-        size="small"
-        className="p-2 border-3"
-      >
-        Edit
-      </Button>
-    );
+  const collapseAll = () => {
+    setExpandedRows(null);
   };
 
-  function loadExercise(rowData) {
-    // copy the element
-    let x = structuredClone(rowData);
-    // remove the steps property, not needed for editing exercises
-    delete x.steps;
-    setVisibleExercise(true);
-    setCurrentEx(x);
-  }
-
-  const exerciseBodyEditTemplate = (rowData) => {
-    return (
-      <Button
-        icon="pi pi-pencil"
-        onClick={() => loadExercise(rowData)}
-        rounded
-        raised
-        className="p-2 border-3 border-white"
-        tooltip={rowData.description}
-      >
-        Edit
-      </Button>
-    );
-  };
-
-  const stepAddBodyTemplate = () => {
-    return (
-      <Button
-        icon="pi pi-plus"
-        onClick={() => loadStep({})}
-        rounded
-        raised
-        className="p-2 border-3 border-white"
-      >
-        Add Step
-      </Button>
-    );
+  const confirmDelete = (recordCount) => {
+    let message = "Do you want to delete " + recordCount + " record(s)?";
+    confirmDialog({
+      message: message,
+      header: "Delete Confirmation",
+      icon: "pi pi-info-circle",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-danger",
+      accept,
+      reject,
+    });
   };
 
   const deleteTemplate = (selected, bgColor) => {
@@ -171,6 +79,132 @@ export function ListExercise() {
     }
   };
 
+  const exerciseBodyEditTemplate = (rowData) => {
+    return (
+      <Button
+        icon="pi pi-pencil"
+        onClick={() => loadExercise(rowData)}
+        rounded
+        raised
+        className="p-2 border-3 border-white"
+        tooltip={rowData.description}
+      >
+        Edit
+      </Button>
+    );
+  };
+
+  const exerciseNameBodyTemplate = (rowData) => {
+    const toolClass = "exercise" + rowData.id;
+    return (
+      <>
+        <Tooltip target={"." + toolClass} />
+        <p
+          className={toolClass}
+          data-pr-tooltip={rowData.description}
+          data-pr-position="left"
+          data-pr-at="right-250 top"
+          data-pr-my="left center-2"
+        >
+          {rowData.name}
+        </p>
+      </>
+    );
+  };
+
+  const expandAll = () => {
+    let _expandedRows = {};
+
+    exercises.forEach((p) => (_expandedRows[`${p.id}`] = true));
+
+    setExpandedRows(_expandedRows);
+  };
+
+  const formatCurrency = (value) => {
+    return value;
+  };
+
+  const header = (
+    <div className="grid">
+      <div className="col-2">
+        <Button
+          label="New Exercise"
+          onClick={() => loadExercise({})}
+          rounded
+          raised
+          className="p-2 border-3 border-white"
+        />
+      </div>
+      <div className="col-10 flex justify-content-end align-items-center">
+        <Button
+          icon="pi pi-plus"
+          label="Expand All"
+          onClick={expandAll}
+          text
+        />
+        <Button
+          icon="pi pi-minus"
+          label="Collapse All"
+          onClick={collapseAll}
+          text
+        />
+      </div>
+    </div>
+  );
+
+  const onRowCollapse = (event) => {
+    toast.current.show({
+      severity: "success",
+      summary: "Exercise Collapsed",
+      detail: event.data.name,
+      life: 3000,
+    });
+  };
+
+  const onRowExpand = (event) => {
+    toast.current.show({
+      severity: "info",
+      summary: "Exercise Expanded",
+      detail: event.data.name,
+      life: 3000,
+    });
+  };
+
+  const stepAddBodyTemplate = (rowData) => {
+    const step = { exerciseId: rowData.id };
+    return (
+      <Button
+        icon="pi pi-plus"
+        onClick={() => loadStep(step)}
+        rounded
+        raised
+        className="p-2 border-3 border-white"
+      >
+        Add Step
+      </Button>
+    );
+  };
+
+  const stepEditTemplateBody = (rowData) => {
+    return (
+      <Button
+        icon="pi pi-pencil"
+        // onClick={() => console.log("Step " + rowData.id)}
+        onClick={() => loadStep(rowData)}
+        outlined
+        raised
+        size="small"
+        className="p-2 border-3"
+      >
+        Edit
+      </Button>
+    );
+  };
+
+  const stepNumBodyTemplate = (rowData) => {
+    return formatCurrency(rowData.stepNum);
+  };
+
   const tallyTemplate = (selected, total, bgColor) => {
     return (
       <Button
@@ -179,6 +213,15 @@ export function ListExercise() {
         {selected ? selected.length : 0} / {total ? total.length : 0} selected
       </Button>
     );
+  };
+
+  const reject = () => {
+    toast.current.show({
+      severity: "warn",
+      summary: "Rejected",
+      detail: "You have rejected",
+      life: 3000,
+    });
   };
 
   const rowExpansionTemplate = (data) => {
@@ -229,64 +272,54 @@ export function ListExercise() {
     );
   };
 
-  const header = (
-    <div className="grid">
-      <div className="col-2">
-        <Button
-          label="New Exercise"
-          onClick={() => loadExercise({})}
-          rounded
-          raised
-          className="p-2 border-3 border-white"
-        />
-      </div>
-      <div className="col-10 flex justify-content-end align-items-center">
-        <Button
-          icon="pi pi-plus"
-          label="Expand All"
-          onClick={expandAll}
-          text
-        />
-        <Button
-          icon="pi pi-minus"
-          label="Collapse All"
-          onClick={collapseAll}
-          text
-        />
-      </div>
-    </div>
-  );
-
-  const accept = () => {
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmed",
-      detail: "You have accepted",
-      life: 3000,
+  function handleAddExcerise(newExercise) {
+    dispatch({
+      type: "added",
+      exercise: newExercise,
     });
-  };
+  }
 
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
+  function handleChangeExcercise(exercise) {
+    dispatch({
+      type: "changed",
+      exercise: exercise,
     });
-  };
+  }
 
-  const confirmDelete = (recordCount) => {
-    let message = "Do you want to delete " + recordCount + " record(s)?";
-    confirmDialog({
-      message: message,
-      header: "Delete Confirmation",
-      icon: "pi pi-info-circle",
-      defaultFocus: "reject",
-      acceptClassName: "p-button-danger",
-      accept,
-      reject,
+  function handleDeleteExcercise(exerciseId) {
+    dispatch({
+      type: "deleted",
+      id: exerciseId,
     });
-  };
+  }
+
+  function handleLoadExcerise(data) {
+    dispatch({
+      type: "loaded",
+      data: data,
+    });
+  }
+
+  function loadExercise(rowData) {
+    // copy the element
+    let x = structuredClone(rowData);
+    // remove the steps property, not needed for editing exercises
+    delete x.steps;
+    setVisibleExercise(true);
+    setCurrentEx(x);
+  }
+
+  function loadStep(rowData) {
+    // copy the element
+    setVisibleStep(true);
+    setCurrentStep(rowData);
+  }
+
+  useEffect(() => {
+    ExerciseService.getExercisesWithStepsSmall().then((data) =>
+      handleLoadExcerise(data)
+    );
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="card">
@@ -328,6 +361,7 @@ export function ListExercise() {
         />
         <Column
           style={{ width: "10rem" }}
+          field="id"
           body={stepAddBodyTemplate}
         />
       </DataTable>

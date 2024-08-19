@@ -26,6 +26,50 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
   const [name, setName] = useState(tempName);
   const [description, setDescription] = useState(tempDescription);
 
+  const footerContent = (
+    <div>
+      <Button
+        label="Cancel"
+        icon="pi pi-times"
+        onClick={() => cancelEdit()}
+        className="p-button-text"
+        autoFocus
+      />
+      <Button
+        label="Update"
+        icon="pi pi-check"
+        onClick={() => saveExercise(exerciseId, name, description)}
+      />
+    </div>
+  );
+
+  function cancelEdit() {
+    setExerciseId(0);
+    setName("");
+    setDescription("");
+    setVisible(false);
+  }
+
+  function headerContent() {
+    if (name) {
+      return "Edit '" + name + "'";
+    } else {
+      return "New";
+    }
+  }
+
+  function saveExercise(exerciseId, name, description) {
+    const updatedExercise = {};
+    console.log("-------------");
+    console.log("save");
+    updatedExercise.id = exerciseId;
+    updatedExercise.name = name;
+    updatedExercise.description = description;
+    console.log(updatedExercise);
+    console.log("-------------");
+    setVisible(false);
+  }
+
   useEffect(() => {
     if (exercise) {
       if (exercise.name) {
@@ -38,48 +82,7 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
         setDescription(exercise.description);
       }
     }
-  }, [setName, exercise]);
-
-  function saveExercise(exerciseId, name, description) {
-    console.log("exerciseId");
-    console.log(exerciseId);
-    console.log("name");
-    console.log(name);
-    console.log("description");
-    console.log(description);
-    setVisible(false);
-  }
-  function cancelEdit() {
-    setExerciseId(0);
-    setName("");
-    setDescription("");
-    setVisible(false);
-  }
-
-  const footerContent = (
-    <div>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        onClick={() => cancelEdit()}
-        className="p-button-text"
-        autoFocus
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        onClick={() => saveExercise(exerciseId, name, description)}
-      />
-    </div>
-  );
-
-  function headerContent() {
-    if (name) {
-      return "Edit '" + name + "'";
-    } else {
-      return "New";
-    }
-  }
+  }, [setName, setExerciseId, setDescription, exercise]);
 
   console.log("exercise");
   console.log(exercise);

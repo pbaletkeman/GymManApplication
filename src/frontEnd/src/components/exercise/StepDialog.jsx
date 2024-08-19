@@ -13,6 +13,7 @@ export function StepDialog({ step, visible, setVisible }) {
   let tempName = "";
   let tempDescription = "";
   let tempStepNum = 0;
+  let tempExerciseId = 0;
   if (step) {
     if (step.id) {
       tempId = step.id;
@@ -26,12 +27,64 @@ export function StepDialog({ step, visible, setVisible }) {
     if (step.stepNum) {
       tempStepNum = step.StepNum;
     }
+    if (step.exerciseId) {
+      tempExerciseId = step.exerciseId;
+    }
   }
 
   const [stepId, setStepId] = useState(tempId);
   const [name, setName] = useState(tempName);
   const [description, setDescription] = useState(tempDescription);
   const [stepNum, setStepNum] = useState(tempStepNum);
+  const [exerciseId, setExerciseId] = useState(tempExerciseId);
+
+  const footerContent = (
+    <div>
+      <Button
+        label="Cancel"
+        icon="pi pi-times"
+        onClick={() => cancelEdit()}
+        className="p-button-text"
+        autoFocus
+      />
+      <Button
+        label="Accept"
+        icon="pi pi-check"
+        onClick={() => saveStep(stepId, name, description, exerciseId)}
+      />
+    </div>
+  );
+
+  function cancelEdit() {
+    setStepId(0);
+    setName("");
+    setDescription("");
+    setStepNum(0);
+    setVisible(false);
+    setExerciseId(0);
+  }
+
+  function headerContent() {
+    if (name) {
+      return "Edit '" + name + "'";
+    } else {
+      return "New";
+    }
+  }
+
+  function saveStep(stepId, name, description, stepNum, exerciseId) {
+    console.log("stepId");
+    console.log(stepId);
+    console.log("name");
+    console.log(name);
+    console.log("description");
+    console.log(description);
+    console.log("stepNum");
+    console.log(stepNum);
+    console.log("exerciseId");
+    console.log(exerciseId);
+    setVisible(false);
+  }
 
   useEffect(() => {
     if (step) {
@@ -47,55 +100,14 @@ export function StepDialog({ step, visible, setVisible }) {
       if (step.stepNum) {
         setStepNum(step.stepNum);
       }
+      if (step.exerciseId) {
+        setExerciseId(step.exerciseId);
+      }
     }
-  }, [setName, step]);
+  }, [setName, setStepId, setDescription, setStepNum, setExerciseId, step]);
 
-  function saveStep(stepId, name, description, stepNum) {
-    console.log("stepId");
-    console.log(stepId);
-    console.log("name");
-    console.log(name);
-    console.log("description");
-    console.log(description);
-    console.log("stepNum");
-    console.log(stepNum);
-    setVisible(false);
-  }
-  function cancelEdit() {
-    setStepId(0);
-    setName("");
-    setDescription("");
-    setStepNum(0);
-    setVisible(false);
-  }
-
-  const footerContent = (
-    <div>
-      <Button
-        label="Cancel"
-        icon="pi pi-times"
-        onClick={() => cancelEdit()}
-        className="p-button-text"
-        autoFocus
-      />
-      <Button
-        label="Accept"
-        icon="pi pi-check"
-        onClick={() => saveStep(stepId, name, description)}
-      />
-    </div>
-  );
-
-  function headerContent() {
-    if (name) {
-      return "Edit '" + name + "'";
-    } else {
-      return "New";
-    }
-  }
-
-  console.log("step");
-  console.log(step);
+  // console.log("step");
+  // console.log(step);
   return (
     <div className="card grid justify-content-center">
       <Dialog
