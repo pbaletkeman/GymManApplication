@@ -3,7 +3,6 @@ import { Exercise } from "./interfaces";
 export default function exercisesReducer(
   exercises: Exercise[],
   action: {
-    id: number | null;
     exercise: Exercise;
     data: Exercise[];
     type: string;
@@ -28,7 +27,7 @@ export default function exercisesReducer(
       });
     }
     case "deleted": {
-      return exercises.filter((t: Exercise) => t.id !== action.id);
+      return exercises.filter((t: Exercise) => t.id !== action.exercise.id);
     }
     case "loaded": {
       return action.data;
