@@ -3,18 +3,19 @@ import { Dropdown } from "primereact/dropdown";
 import { Checkbox } from "primereact/checkbox";
 import { FloatLabel } from "primereact/floatlabel";
 import { Toast } from "primereact/toast";
+import React from "react";
 
 function ThemeController() {
   let localTheme = localStorage.getItem("theme");
 
-  const [selectedTheme, setSelectedTheme] = useState(localTheme);
-  const [saveTheme, setSaveTheme] = useState(false);
-  const [saveMsg, setSaveMsg] = useState("Save?");
+  const [selectedTheme, setSelectedTheme] = useState<string | null>(localTheme);
+  const [saveTheme, setSaveTheme] = useState<boolean>(false);
+  const [saveMsg, setSaveMsg] = useState<string>("Save?");
 
-  const toast = useRef(null);
+  const toast = useRef<Toast>(null);
 
   const show = () => {
-    toast.current.show({
+    toast.current?.show({
       severity: "info",
       summary: "Theme",
       detail: "Saving Theme Preferances",
@@ -25,7 +26,11 @@ function ThemeController() {
     if (selectedTheme) {
       let themeLink = document.getElementById("app-theme");
       if (themeLink) {
-        themeLink.href = "/themes/" + selectedTheme + "/theme.css";
+        // themeLink.href = "/themes/" + selectedTheme + "/theme.css";
+        themeLink.setAttribute(
+          "href",
+          "/themes/" + selectedTheme + "/theme.css"
+        );
       }
     }
   }, [selectedTheme]);
@@ -92,14 +97,15 @@ function ThemeController() {
     setSelectedTheme(theme);
     let themeLink = document.getElementById("app-theme");
     if (themeLink) {
-      themeLink.href = "/themes/" + theme + "/theme.css";
+      // themeLink.href = "/themes/" + theme + "/theme.css";
+      themeLink.setAttribute("href", "/themes/" + theme + "/theme.css");
     }
   };
 
   const saveThemeFunction = () => {
     setSaveTheme(true);
     setSaveMsg("Saving...");
-    localStorage.setItem("theme", selectedTheme);
+    localStorage.setItem("theme", selectedTheme || "");
     show();
     setTimeout(() => {
       setSaveTheme(false);
