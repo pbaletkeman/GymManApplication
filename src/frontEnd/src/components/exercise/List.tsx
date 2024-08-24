@@ -1,34 +1,47 @@
 import { useState, useEffect, useRef, useReducer } from "react";
-import { DataTable } from "primereact/datatable";
+import {
+  DataTable,
+  DataTableExpandedRows,
+  DataTableValue,
+  DataTableValueArray,
+} from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ExerciseService } from "./Service/ProductService";
+import { ExerciseService } from "./Service/ProductService.jsx";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
-import { ExerciseDialog } from "./ExerciseDialog";
-import { StepDialog } from "./StepDialog";
+import { ExerciseDialog } from "./ExerciseDialog.jsx";
+import { StepDialog } from "./StepDialog.js";
 
 import exercisesReducer from "./exercisesReducer.js";
+import React from "react";
+import { Exercise, Step } from "./interfaces.js";
 
 export function ListExercise() {
-  const toast = useRef(null);
+  const toast = useRef<Toast>(null);
 
-  const [expandedRows, setExpandedRows] = useState(null);
+  const [expandedRows, setExpandedRows] = useState<any[]>([]);
 
   // const [exercises, setExercises] = useState([]);
   const [exercises, dispatch] = useReducer(exercisesReducer, []);
 
   const [visibleExercise, setVisibleExercise] = useState(false);
   const [visibleStep, setVisibleStep] = useState(false);
-  const [currentEx, setCurrentEx] = useState({});
-  const [currentStep, setCurrentStep] = useState({});
-  const [selectedExercises, setSelectedExercises] = useState(null);
-  const [selectedSteps, setSelectedSteps] = useState(null);
+  const [currentEx, setCurrentEx] = useState<Exercise | null>(null);
+  const [currentStep, setCurrentStep] = useState<Step>({
+    name: null,
+    id: null,
+    description: null,
+    stepNum: null,
+    exerciseId: null,
+  });
+  const [selectedExercises, setSelectedExercises] = useState<DataTableValue>();
+  const [selectedSteps, setSelectedSteps] = useState<DataTableValue>();
 
   const accept = () => {
-    toast.current.show({
+    toast.current?.show({
       severity: "info",
       summary: "Confirmed",
       detail: "You have accepted",
@@ -36,15 +49,15 @@ export function ListExercise() {
     });
   };
 
-  const allowExpansion = (rowData) => {
+  const allowExpansion = (rowData: { steps: Step[] }) => {
     return rowData.steps.length > 0;
   };
-
+  ``;
   const collapseAll = () => {
-    setExpandedRows(null);
+    setExpandedRows([]);
   };
 
-  const confirmDelete = (recordCount) => {
+  const confirmDelete = (recordCount: number) => {
     let message = "Do you want to delete " + recordCount + " record(s)?";
     confirmDialog({
       message: message,
@@ -57,8 +70,8 @@ export function ListExercise() {
     });
   };
 
-  const deleteTemplate = (selected, bgColor) => {
-    if (selected && selected.length > 0) {
+  const deleteTemplate = (selected?: DataTableValue, bgColor?: string) => {
+    if (selected && Array.isArray(selected) && selected.length > 0) {
       return (
         <Button
           icon="pi pi-times"
@@ -79,7 +92,7 @@ export function ListExercise() {
     }
   };
 
-  const exerciseBodyEditTemplate = (rowData) => {
+  const exerciseBodyEditTemplate = (rowData: Exercise) => {
     return (
       <Button
         icon="pi pi-pencil"
@@ -94,7 +107,7 @@ export function ListExercise() {
     );
   };
 
-  const exerciseNameBodyTemplate = (rowData) => {
+  const exerciseNameBodyTemplate = (rowData: Exercise) => {
     const toolClass = "exercise" + rowData.id;
     return (
       <>
@@ -113,14 +126,14 @@ export function ListExercise() {
   };
 
   const expandAll = () => {
-    let _expandedRows = {};
+    let _expandedRows: any = {};
 
     exercises.forEach((p) => (_expandedRows[`${p.id}`] = true));
 
     setExpandedRows(_expandedRows);
   };
 
-  const formatCurrency = (value) => {
+  const formatCurrency = (value: any) => {
     return value;
   };
 
@@ -129,7 +142,7 @@ export function ListExercise() {
       <div className="col-2">
         <Button
           label="New Exercise"
-          onClick={() => loadExercise({})}
+          onClick={() => loadExercise({ name: "", id: -1, steps: [] })}
           rounded
           raised
           className="p-2 border-3 border-white"
@@ -152,8 +165,8 @@ export function ListExercise() {
     </div>
   );
 
-  const onRowCollapse = (event) => {
-    toast.current.show({
+  const onRowCollapse = (event: { data: { name: any } }) => {
+    toast.current?.show({
       severity: "success",
       summary: "Exercise Collapsed",
       detail: event.data.name,
@@ -161,8 +174,8 @@ export function ListExercise() {
     });
   };
 
-  const onRowExpand = (event) => {
-    toast.current.show({
+  const onRowExpand = (event: { data: { name: any } }) => {
+    toast.current?.show({
       severity: "info",
       summary: "Exercise Expanded",
       detail: event.data.name,
@@ -170,8 +183,14 @@ export function ListExercise() {
     });
   };
 
-  const stepAddBodyTemplate = (rowData) => {
-    const step = { exerciseId: rowData.id };
+  const stepAddBodyTemplate = (rowData: Exercise) => {
+    const step: Step = {
+      exerciseId: rowData.id,
+      name: null,
+      id: null,
+      description: null,
+      stepNum: null,
+    };
     return (
       <Button
         icon="pi pi-plus"
@@ -185,11 +204,10 @@ export function ListExercise() {
     );
   };
 
-  const stepEditTemplateBody = (rowData) => {
+  const stepEditTemplateBody = (rowData: Step) => {
     return (
       <Button
         icon="pi pi-pencil"
-        // onClick={() => console.log("Step " + rowData.id)}
         onClick={() => loadStep(rowData)}
         outlined
         raised
@@ -201,11 +219,15 @@ export function ListExercise() {
     );
   };
 
-  const stepNumBodyTemplate = (rowData) => {
+  const stepNumBodyTemplate = (rowData: Step) => {
     return formatCurrency(rowData.stepNum);
   };
 
-  const tallyTemplate = (selected, total, bgColor) => {
+  const tallyTemplate = (
+    selected?: DataTableValue,
+    total?: any[] | null,
+    bgColor?: string
+  ) => {
     return (
       <Button
         className={"p-2 border-none text-color " + bgColor + " cursor-auto	"}
@@ -216,7 +238,7 @@ export function ListExercise() {
   };
 
   const reject = () => {
-    toast.current.show({
+    toast.current?.show({
       severity: "warn",
       summary: "Rejected",
       detail: "You have rejected",
@@ -224,9 +246,7 @@ export function ListExercise() {
     });
   };
 
-  const rowExpansionTemplate = (data) => {
-    console.log("setSelectedSteps");
-    console.log(selectedSteps);
+  const rowExpansionTemplate = (data: Exercise) => {
     return (
       <div className="p-3">
         <h5>Steps for {data.name}</h5>
@@ -265,54 +285,60 @@ export function ListExercise() {
           ></Column>
         </DataTable>
         <div className="flex justify-content-start flex-wrap align-items-center gap-2 pt-4">
-          {tallyTemplate(selectedSteps, data.steps, "surface-50")}
+          {tallyTemplate(selectedSteps, data.steps || null, "surface-50")}
           {deleteTemplate(selectedSteps, "surface-50")}
         </div>
       </div>
     );
   };
 
-  function handleAddExcerise(newExercise) {
+  function handleAddExcerise(newExercise: Exercise) {
     dispatch({
       type: "added",
       exercise: newExercise,
     });
   }
 
-  function handleChangeExcercise(exercise) {
+  function handleChangeExcercise(exercise: Exercise) {
     dispatch({
       type: "changed",
       exercise: exercise,
     });
   }
 
-  function handleDeleteExcercise(exerciseId) {
+  function handleDeleteExcercise(exerciseId: Exercise) {
     dispatch({
       type: "deleted",
       id: exerciseId,
     });
   }
 
-  function handleLoadExcerise(data) {
+  function handleLoadExcerise(data: Exercise) {
     dispatch({
       type: "loaded",
       data: data,
     });
   }
 
-  function loadExercise(rowData) {
-    // copy the element
-    let x = structuredClone(rowData);
-    // remove the steps property, not needed for editing exercises
-    delete x.steps;
-    setVisibleExercise(true);
-    setCurrentEx(x);
+  function loadExercise(rowData: Exercise) {
+    if (rowData) {
+      // copy the element
+      let x = structuredClone(rowData);
+      if (x.steps) {
+        // remove the steps property, not needed for editing exercises
+        x.steps = [];
+      }
+      setVisibleExercise(true);
+      setCurrentEx(x);
+    }
   }
 
-  function loadStep(rowData) {
+  function loadStep(rowData: React.SetStateAction<Step>) {
     // copy the element
     setVisibleStep(true);
-    setCurrentStep(rowData);
+    if (rowData) {
+      setCurrentStep(rowData);
+    }
   }
 
   useEffect(() => {

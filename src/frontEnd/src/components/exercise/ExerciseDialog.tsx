@@ -1,10 +1,12 @@
-import { PropTypes } from "prop-types";
+import * as PropTypes from "prop-types";
 
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { useEffect, useState } from "react";
+import React from "react";
+import { Exercise } from "./interfaces";
 
 export function ExerciseDialog({ exercise, visible, setVisible }) {
   let tempId = 0;
@@ -59,7 +61,7 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
   }
 
   function saveExercise(exerciseId, name, description) {
-    const updatedExercise = {};
+    let updatedExercise: Exercise = { name: "", id: -1, steps: [] };
     console.log("-------------");
     console.log("save");
     updatedExercise.id = exerciseId;

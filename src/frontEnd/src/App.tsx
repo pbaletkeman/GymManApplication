@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import { Excerise } from "./components/exercise/Exercise";
 import { StepsMain } from "./components/steps/StepsMain";

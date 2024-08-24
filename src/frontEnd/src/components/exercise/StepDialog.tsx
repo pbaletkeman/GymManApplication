@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { PropTypes } from "prop-types";
+import * as PropTypes from "prop-types";
 
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import React from "react";
 
 export function StepDialog({ step, visible, setVisible }) {
   let tempId = 0;
@@ -32,11 +33,13 @@ export function StepDialog({ step, visible, setVisible }) {
     }
   }
 
-  const [stepId, setStepId] = useState(tempId);
-  const [name, setName] = useState(tempName);
-  const [description, setDescription] = useState(tempDescription);
-  const [stepNum, setStepNum] = useState(tempStepNum);
-  const [exerciseId, setExerciseId] = useState(tempExerciseId);
+  const [stepId, setStepId] = useState<number | null>(tempId);
+  const [name, setName] = useState<string | null>(tempName);
+  const [description, setDescription] = useState<string | null>(
+    tempDescription
+  );
+  const [stepNum, setStepNum] = useState<number | null>(tempStepNum);
+  const [exerciseId, setExerciseId] = useState<number | null>(tempExerciseId);
 
   const footerContent = (
     <div>
@@ -50,7 +53,7 @@ export function StepDialog({ step, visible, setVisible }) {
       <Button
         label="Accept"
         icon="pi pi-check"
-        onClick={() => saveStep(stepId, name, description, exerciseId)}
+        onClick={() => saveStep(stepId, name, description, stepNum, exerciseId)}
       />
     </div>
   );
@@ -72,7 +75,13 @@ export function StepDialog({ step, visible, setVisible }) {
     }
   }
 
-  function saveStep(stepId, name, description, stepNum, exerciseId) {
+  function saveStep(
+    stepId: number | null,
+    name: string | null,
+    description: string | null,
+    stepNum: number | null,
+    exerciseId: number | null
+  ) {
     console.log("stepId");
     console.log(stepId);
     console.log("name");
@@ -135,7 +144,7 @@ export function StepDialog({ step, visible, setVisible }) {
           <div className="col-3">
             <InputNumber
               value={stepNum}
-              onValueChange={(e) => setStepNum(e.value)}
+              onValueChange={(e) => setStepNum(e.value || 0)}
               showButtons
               min={0}
               max={10}
@@ -147,7 +156,7 @@ export function StepDialog({ step, visible, setVisible }) {
         <div>
           <p>Description</p>
           <InputTextarea
-            value={description}
+            value={description || ""}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             cols={80}
