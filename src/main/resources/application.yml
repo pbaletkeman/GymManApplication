@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/pete
+    username: pete
+    password: pete
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        boot:
+          allow_jdbc_metadata_access: false
+    sql:
+      init:
+        mode: never
+
+  servlet:
+    multipart:
+      max-file-size: 15MB # max file size for each request
+      max-request-size: 15MB # max request size for a multipart/form-data
+springdoc:
+  api-docs:
+    path: /api-docs
