@@ -1,16 +1,5 @@
-export const Exerciseservice = {
-  getExercisesData(): {
-    id: string;
-    code: string;
-    name: string;
-    description: string;
-    image: string;
-    price: number;
-    category: string;
-    quantity: number;
-    inventoryStatus: string;
-    rating: number;
-  }[] {
+export const ExerciseService = {
+  getProductsData() {
     return [
       {
         id: "1000",
@@ -375,7 +364,7 @@ export const Exerciseservice = {
     ];
   },
 
-  getExercisesWithStepsData() {
+  getProductsWithOrdersData() {
     return [
       {
         id: "1000",
@@ -388,7 +377,7 @@ export const Exerciseservice = {
         quantity: 24,
         inventoryStatus: "INSTOCK",
         rating: 5,
-        Steps: [
+        orders: [
           {
             id: "1000-0",
             productCode: "f230fh0g3",
@@ -438,7 +427,7 @@ export const Exerciseservice = {
         quantity: 61,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1001-0",
             productCode: "nvklal433",
@@ -470,7 +459,7 @@ export const Exerciseservice = {
         quantity: 2,
         inventoryStatus: "LOWSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1002-0",
             productCode: "zz21cz3c1",
@@ -502,7 +491,7 @@ export const Exerciseservice = {
         quantity: 25,
         inventoryStatus: "INSTOCK",
         rating: 5,
-        Steps: [],
+        orders: [],
       },
       {
         id: "1004",
@@ -515,7 +504,7 @@ export const Exerciseservice = {
         quantity: 73,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1004-0",
             productCode: "h456wer53",
@@ -547,7 +536,7 @@ export const Exerciseservice = {
         quantity: 0,
         inventoryStatus: "OUTOFSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1005-0",
             productCode: "av2231fwg",
@@ -588,7 +577,7 @@ export const Exerciseservice = {
         quantity: 5,
         inventoryStatus: "LOWSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1006-0",
             productCode: "bib36pfvm",
@@ -620,7 +609,7 @@ export const Exerciseservice = {
         quantity: 23,
         inventoryStatus: "INSTOCK",
         rating: 5,
-        Steps: [
+        orders: [
           {
             id: "1007-0",
             productCode: "mbvjkgip5",
@@ -643,7 +632,7 @@ export const Exerciseservice = {
         quantity: 2,
         inventoryStatus: "LOWSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1008-0",
             productCode: "vbb124btr",
@@ -675,7 +664,7 @@ export const Exerciseservice = {
         quantity: 63,
         inventoryStatus: "INSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1009-0",
             productCode: "cm230f032",
@@ -725,7 +714,7 @@ export const Exerciseservice = {
         quantity: 0,
         inventoryStatus: "OUTOFSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1010-0",
             productCode: "plb34234v",
@@ -757,7 +746,7 @@ export const Exerciseservice = {
         quantity: 23,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1011-0",
             productCode: "4920nnc2d",
@@ -780,7 +769,7 @@ export const Exerciseservice = {
         quantity: 74,
         inventoryStatus: "INSTOCK",
         rating: 5,
-        Steps: [
+        orders: [
           {
             id: "1012-0",
             productCode: "250vm23cc",
@@ -812,7 +801,7 @@ export const Exerciseservice = {
         quantity: 0,
         inventoryStatus: "OUTOFSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1013-0",
             productCode: "fldsmn31b",
@@ -835,7 +824,7 @@ export const Exerciseservice = {
         quantity: 8,
         inventoryStatus: "LOWSTOCK",
         rating: 5,
-        Steps: [
+        orders: [
           {
             id: "1014-0",
             productCode: "waas1x2as",
@@ -867,7 +856,7 @@ export const Exerciseservice = {
         quantity: 34,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1015-0",
             productCode: "vb34btbg5",
@@ -890,7 +879,7 @@ export const Exerciseservice = {
         quantity: 12,
         inventoryStatus: "INSTOCK",
         rating: 3,
-        Steps: [],
+        orders: [],
       },
       {
         id: "1017",
@@ -903,7 +892,7 @@ export const Exerciseservice = {
         quantity: 42,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1017-0",
             productCode: "v435nn85n",
@@ -926,7 +915,7 @@ export const Exerciseservice = {
         quantity: 41,
         inventoryStatus: "INSTOCK",
         rating: 5,
-        Steps: [
+        orders: [
           {
             id: "1018-0",
             productCode: "09zx9c0zc",
@@ -958,7 +947,7 @@ export const Exerciseservice = {
         quantity: 63,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [],
+        orders: [],
       },
       {
         id: "1020",
@@ -971,7 +960,7 @@ export const Exerciseservice = {
         quantity: 0,
         inventoryStatus: "OUTOFSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1020-0",
             productCode: "r23fwf2w3",
@@ -1003,7 +992,7 @@ export const Exerciseservice = {
         quantity: 6,
         inventoryStatus: "LOWSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1021-0",
             productCode: "pxpzczo23",
@@ -1026,7 +1015,7 @@ export const Exerciseservice = {
         quantity: 62,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1022-0",
             productCode: "2c42cb5cb",
@@ -1058,7 +1047,7 @@ export const Exerciseservice = {
         quantity: 2,
         inventoryStatus: "LOWSTOCK",
         rating: 5,
-        Steps: [
+        orders: [
           {
             id: "1023-0",
             productCode: "5k43kkk23",
@@ -1081,7 +1070,7 @@ export const Exerciseservice = {
         quantity: 0,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [],
+        orders: [],
       },
       {
         id: "1025",
@@ -1094,7 +1083,7 @@ export const Exerciseservice = {
         quantity: 52,
         inventoryStatus: "INSTOCK",
         rating: 4,
-        Steps: [
+        orders: [
           {
             id: "1025-0",
             productCode: "nbm5mv45n",
@@ -1126,7 +1115,7 @@ export const Exerciseservice = {
         quantity: 3,
         inventoryStatus: "LOWSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1026-0",
             productCode: "zx23zc42c",
@@ -1149,7 +1138,7 @@ export const Exerciseservice = {
         quantity: 35,
         inventoryStatus: "INSTOCK",
         rating: 3,
-        Steps: [
+        orders: [
           {
             id: "1027-0",
             productCode: "acvx872gc",
@@ -1181,7 +1170,7 @@ export const Exerciseservice = {
         quantity: 15,
         inventoryStatus: "INSTOCK",
         rating: 5,
-        Steps: [],
+        orders: [],
       },
       {
         id: "1029",
@@ -1194,7 +1183,7 @@ export const Exerciseservice = {
         quantity: 25,
         inventoryStatus: "INSTOCK",
         rating: 8,
-        Steps: [
+        orders: [
           {
             id: "1029-0",
             productCode: "gwuby345v",
@@ -1209,56 +1198,23 @@ export const Exerciseservice = {
     ];
   },
 
-  getExercisesMini() {
-    return Promise.resolve(this.getExercisesData().slice(0, 5));
+  getProductsMini() {
+    return Promise.resolve(this.getProductsData().slice(0, 5));
   },
 
-  getExercisesSmall() {
-    return Promise.resolve(this.getExercisesData().slice(0, 10));
+  getProductsSmall() {
+    return Promise.resolve(this.getProductsData().slice(0, 10));
   },
 
-  getExercises() {
-    return Promise.resolve(this.getExercisesData());
+  getProducts() {
+    return Promise.resolve(this.getProductsData());
   },
 
-  getExercisesWithStepsSmall() {
-    return Promise.resolve(this.getExercisesWithStepsData().slice(0, 10));
+  getProductsWithOrdersSmall() {
+    return Promise.resolve(this.getProductsWithOrdersData().slice(0, 10));
   },
 
-  getExercisesWithSteps() {
-    return Promise.resolve(this.getExercisesWithStepsData());
-  },
-
-  makeAPICall: () => {
-    // Set up options for the fetch request
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json", // Set content type to JSON
-      },
-    };
-
-    // Make the fetch request with the provided options
-    // let data = [];
-    fetch("http://localhost:8080/api/exercises", options)
-      .then((response) => {
-        // Check if the request was successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        // Parse the response as JSON
-        // return await response.json();
-        return response.json();
-      })
-      // .then((data) => {
-      //   // Handle the JSON data
-      //   // console.log("data");
-      //   // console.log(data);
-      //   getExercisesWithStepsDataA = data;
-      // })
-      .catch((error) => {
-        // Handle any errors that occurred during the fetch
-        console.error("Fetch error:", error);
-      });
+  getProductsWithOrders() {
+    return Promise.resolve(this.getProductsWithOrdersData());
   },
 };

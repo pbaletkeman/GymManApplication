@@ -11,8 +11,8 @@ spring:
     show-sql: true
 
     database: POSTGRESQL
-    hibernate:
-      ddl-auto: none
+#    hibernate:
+#      ddl-auto: create
     properties:
       hibernate:
         boot:

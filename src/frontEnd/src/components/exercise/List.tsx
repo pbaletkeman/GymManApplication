@@ -6,7 +6,7 @@ import {
   DataTableValueArray,
 } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ExerciseService } from "./Service/ProductService.jsx";
+import { ExerciseService } from "./Service/ExerciseService.jsx";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
@@ -342,9 +342,11 @@ export function ListExercise() {
   }
 
   useEffect(() => {
-    ExerciseService.getExercisesWithStepsSmall().then((data) =>
-      handleLoadExcerise(data)
-    );
+    ExerciseService.getExercisesWithStepsSmall().then((data) => {
+      console.log("data123");
+      console.log(data);
+      handleLoadExcerise(data);
+    });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
