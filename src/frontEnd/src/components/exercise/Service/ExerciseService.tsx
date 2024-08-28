@@ -193,30 +193,6 @@ export const ExerciseService = {
     ];
   },
 
-  getExercisesData() {
-    return this.getExercisesWithStepsData();
-  },
-
-  getExercisesMini() {
-    return Promise.resolve(this.getExercisesData().slice(0, 5));
-  },
-
-  getExercisesSmall() {
-    return Promise.resolve(this.getExercisesData().slice(0, 10));
-  },
-
-  getExercises() {
-    return Promise.resolve(this.getExercisesData());
-  },
-
-  getExercisesWithStepsSmall() {
-    return Promise.resolve(this.getExercisesWithStepsData().slice(0, 10));
-  },
-
-  getExercisesWithSteps() {
-    return Promise.resolve(this.getExercisesWithStepsData());
-  },
-
   makeAPICall() {
     // Set up options for the fetch request
     const options = {
@@ -239,10 +215,39 @@ export const ExerciseService = {
       .then((data) => {
         // Handle the JSON data
         console.log(data);
+        return data;
       })
       .catch((error) => {
         // Handle any errors that occurred during the fetch
         console.error("Fetch error:", error);
       });
+  },
+
+  getExercisesWithStepsDataNEW() {
+    return Promise.resolve(this.makeAPICall());
+  },
+
+  getExercisesData() {
+    return this.getExercisesWithStepsData();
+  },
+
+  getExercisesMini() {
+    return Promise.resolve(this.getExercisesData().slice(0, 5));
+  },
+
+  getExercisesSmall() {
+    return Promise.resolve(this.getExercisesData().slice(0, 10));
+  },
+
+  getExercises() {
+    return Promise.resolve(this.getExercisesData());
+  },
+
+  getExercisesWithStepsSmall() {
+    return Promise.resolve(this.getExercisesWithStepsData().slice(0, 10));
+  },
+
+  getExercisesWithSteps() {
+    return Promise.resolve(this.getExercisesWithStepsData());
   },
 };
