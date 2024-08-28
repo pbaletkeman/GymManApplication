@@ -1,10 +1,5 @@
 import { useState, useEffect, useRef, useReducer } from "react";
-import {
-  DataTable,
-  DataTableExpandedRows,
-  DataTableValue,
-  DataTableValueArray,
-} from "primereact/datatable";
+import { DataTable, DataTableValue } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ExerciseService } from "./Service/ExerciseService.jsx";
 import { Button } from "primereact/button";
@@ -25,7 +20,7 @@ export function ListExercise() {
   const [expandedRows, setExpandedRows] = useState<any[]>([]);
 
   // const [exercises, setExercises] = useState([]);
-  const [exercises, dispatch] = useReducer(exercisesReducer, []);
+  const [exercises, dispatch] = useReducer<any>(exercisesReducer, []);
 
   const [visibleExercise, setVisibleExercise] = useState(false);
   const [visibleStep, setVisibleStep] = useState(false);
@@ -293,29 +288,34 @@ export function ListExercise() {
   };
 
   function handleAddExcerise(newExercise: Exercise) {
-    dispatch({
+    let temp = ""; // otherwise a linter error
+    dispatch: ({
       type: "added",
       exercise: newExercise,
     });
   }
 
   function handleChangeExcercise(exercise: Exercise) {
-    dispatch({
+    let temp = ""; // otherwise a linter error
+    dispatch: ({
       type: "changed",
-      exercise: exercise,
+      id: exercise,
     });
   }
 
   function handleDeleteExcercise(exerciseId: Exercise) {
-    dispatch({
+    let temp = ""; // otherwise a linter error
+    dispatch: ({
       type: "deleted",
-      id: exerciseId,
+      id: { name: "", id: exerciseId.id, steps: [] },
     });
   }
 
   function handleLoadExcerise(data: Exercise) {
-    dispatch({
+    let temp = ""; // otherwise a linter error
+    dispatch: ({
       type: "loaded",
+      exercise: { name: "", id: 0, steps: [] },
       data: data,
     });
   }

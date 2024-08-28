@@ -3,23 +3,24 @@ import { Exercise } from "./interfaces";
 export default function exercisesReducer(
   exercises: Exercise[],
   action: {
-    exercise: Exercise;
-    data: Exercise[];
+    exercise?: Exercise;
+    data?: Exercise[];
     type: string;
-  }
+  },
+  id?: number
 ) {
   switch (action.type) {
     case "added": {
       let tempItem: Exercise = {
-        name: action.exercise.name,
-        id: action.exercise.id,
-        steps: action.exercise.steps,
+        name: action.exercise?.name,
+        id: action.exercise?.id,
+        steps: action.exercise?.steps,
       };
       return [...exercises, tempItem];
     }
     case "changed": {
       return exercises.map((t: Exercise) => {
-        if (t.id === action.exercise.id) {
+        if (t.id === action.exercise?.id) {
           return action.exercise;
         } else {
           return t;
@@ -27,7 +28,7 @@ export default function exercisesReducer(
       });
     }
     case "deleted": {
-      return exercises.filter((t: Exercise) => t.id !== action.exercise.id);
+      return exercises.filter((t: Exercise) => t.id !== action.exercise?.id);
     }
     case "loaded": {
       return action.data;

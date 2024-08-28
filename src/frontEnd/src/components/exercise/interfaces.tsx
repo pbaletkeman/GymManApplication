@@ -1,8 +1,8 @@
 export interface Exercise {
-  name: string | null;
-  id: number | null;
+  name?: string | null;
+  id?: number | null;
   description?: string;
-  steps: Step[] | null;
+  steps?: Step[] | null;
 }
 
 export interface Step {
@@ -10,5 +10,5 @@ export interface Step {
   id: number | null;
   description?: string | null | undefined;
   stepNum: number | null;
-  exerciseId: number | null;
+  exerciseId: number | null | undefined;
 }
