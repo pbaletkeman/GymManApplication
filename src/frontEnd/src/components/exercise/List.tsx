@@ -343,8 +343,6 @@ export function ListExercise() {
 
   useEffect(() => {
     ExerciseService.getExercisesWithStepsSmall().then((data) => {
-      console.log("data123");
-      console.log(data);
       handleLoadExcerise(data);
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
