@@ -216,4 +216,33 @@ export const ExerciseService = {
   getExercisesWithSteps() {
     return Promise.resolve(this.getExercisesWithStepsData());
   },
+
+  makeAPICall() {
+    // Set up options for the fetch request
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json", // Set content type to JSON
+      },
+    };
+
+    // Make the fetch request with the provided options
+    fetch("http://localhost:8080/api/exercises", options)
+      .then((response) => {
+        // Check if the request was successful
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        // Parse the response as JSON
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the JSON data
+        console.log(data);
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the fetch
+        console.error("Fetch error:", error);
+      });
+  },
 };
