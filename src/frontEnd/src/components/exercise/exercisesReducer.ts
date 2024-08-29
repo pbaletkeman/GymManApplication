@@ -1,14 +1,13 @@
 import { Exercise } from "./interfaces";
 
 export default function exercisesReducer(
-  exercises: Exercise[],
+  data: Exercise[] | undefined,
   action: {
-    exercise?: Exercise;
-    data?: Exercise[];
+    exercise?: Exercise | undefined;
     type: string;
-  },
-  id?: number
-) {
+    data?: Exercise[] | undefined;
+  }
+): Exercise[] {
   switch (action.type) {
     case "added": {
       let tempItem: Exercise = {
@@ -16,10 +15,10 @@ export default function exercisesReducer(
         id: action.exercise?.id,
         steps: action.exercise?.steps,
       };
-      return [...exercises, tempItem];
+      return [...data, tempItem];
     }
     case "changed": {
-      return exercises.map((t: Exercise) => {
+      return data.map((t: Exercise) => {
         if (t.id === action.exercise?.id) {
           return action.exercise;
         } else {
@@ -28,9 +27,10 @@ export default function exercisesReducer(
       });
     }
     case "deleted": {
-      return exercises.filter((t: Exercise) => t.id !== action.exercise?.id);
+      return action.data.filter((t: Exercise) => t.id !== action.exercise?.id);
     }
     case "loaded": {
+      console.log(action);
       return action.data;
     }
     default: {

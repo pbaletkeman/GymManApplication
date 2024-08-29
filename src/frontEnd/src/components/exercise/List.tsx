@@ -14,13 +14,23 @@ import exercisesReducer from "./exercisesReducer.js";
 import React from "react";
 import { Exercise, Step } from "./interfaces.js";
 
+function createInitialState() {
+  return [];
+}
+
+interface reducerFunction {
+  (state: Exercise[], actions: any): Exercise[];
+}
+
 export function ListExercise() {
   const toast = useRef<Toast>(null);
 
   const [expandedRows, setExpandedRows] = useState<any[]>([]);
 
-  // const [exercises, setExercises] = useState([]);
-  const [exercises, dispatch] = useReducer<any>(exercisesReducer, []);
+  const [exercises, dispatch] = useReducer<reducerFunction>(
+    exercisesReducer,
+    []
+  );
 
   const [visibleExercise, setVisibleExercise] = useState(false);
   const [visibleStep, setVisibleStep] = useState(false);
@@ -288,7 +298,6 @@ export function ListExercise() {
   };
 
   function handleAddExcerise(newExercise: Exercise) {
-    let temp = ""; // otherwise a linter error
     dispatch: ({
       type: "added",
       exercise: newExercise,
@@ -296,7 +305,6 @@ export function ListExercise() {
   }
 
   function handleChangeExcercise(exercise: Exercise) {
-    let temp = ""; // otherwise a linter error
     dispatch: ({
       type: "changed",
       id: exercise,
@@ -304,7 +312,6 @@ export function ListExercise() {
   }
 
   function handleDeleteExcercise(exerciseId: Exercise) {
-    let temp = ""; // otherwise a linter error
     dispatch: ({
       type: "deleted",
       id: { name: "", id: exerciseId.id, steps: [] },
@@ -312,10 +319,8 @@ export function ListExercise() {
   }
 
   function handleLoadExcerise(data: Exercise) {
-    let temp = ""; // otherwise a linter error
-    dispatch: ({
+    dispatch({
       type: "loaded",
-      exercise: { name: "", id: 0, steps: [] },
       data: data,
     });
   }
@@ -341,10 +346,41 @@ export function ListExercise() {
     }
   }
 
+  function makeAPICall() {
+    // Set up options for the fetch request
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json", // Set content type to JSON
+      },
+    };
+
+    // Make the fetch request with the provided options
+    fetch("http://localhost:8080/api/exercises", options)
+      .then((response) => {
+        // Check if the request was successful
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        // Parse the response as JSON
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the JSON data
+        // console.log(data);
+        handleLoadExcerise(data);
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the fetch
+        console.error("Fetch error:", error);
+      });
+  }
+
   useEffect(() => {
-    ExerciseService.getExercisesWithStepsSmall().then((data) => {
-      handleLoadExcerise(data);
-    });
+    makeAPICall();
+    // ExerciseService.getExercisesWithStepsSmall().then((data) => {
+    //   handleLoadExcerise(data);
+    // });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
