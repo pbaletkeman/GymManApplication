@@ -38,7 +38,7 @@ public class SampleDataLoader implements CommandLineRunner {
 //    // Create exercises
 //    List<Exercise> ex = new ArrayList<>();
 //    for (int i = 0; i < 10; i++) {
-//      ex.add(new Exercise(faker.name().fullName(), routines));
+//      ex.add(new Exercise(faker.name().fullName(), faker.bojackHorseman().quotes(),  routines));
 //    }
 //    // Save exercises
 //    exerciseRepository.saveAll(ex);

@@ -28,6 +28,9 @@ public class Exercise {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "description")
+  private String description;
+
   @OneToMany(
       fetch = FetchType.LAZY,
       mappedBy = "exercise",
@@ -48,6 +51,8 @@ public class Exercise {
   )
   private Set<Routine> routine;
 
+
+
   public Set<Routine> getRoutine() {
     return routine;
   }
@@ -60,17 +65,19 @@ public class Exercise {
     this.name = name;
   }
 
-  public Exercise(String name, Set<Routine> routines ) {
+  public Exercise(String name, String description, Set<Routine> routines ) {
     this.name = name;
     this.routine = routines;
+    this.description = description;
   }
 
   public Exercise() {
   }
 
-  public Exercise(Long id, String name, List<Step> steps) {
+  public Exercise(Long id, String name, String description, List<Step> steps) {
     this.id = id;
     this.name = name;
+    this.description = description;
     this.steps = steps;
   }
 
@@ -88,6 +95,14 @@ public class Exercise {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public List<Step> getSteps() {
@@ -121,6 +136,7 @@ public class Exercise {
     return new StringJoiner(", ", Exercise.class.getSimpleName() + "[", "]")
         .add("id=" + id)
         .add("name='" + name + "'")
+        .add("description='" + description + "'")
         .add("steps=" + steps)
         .toString();
   }
