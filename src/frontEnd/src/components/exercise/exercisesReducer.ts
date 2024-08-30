@@ -8,6 +8,8 @@ export default function exercisesReducer(
     data?: Exercise[] | undefined;
   }
 ): Exercise[] {
+  console.log("Action");
+  console.log(action);
   switch (action.type) {
     case "added": {
       let tempItem: Exercise = {

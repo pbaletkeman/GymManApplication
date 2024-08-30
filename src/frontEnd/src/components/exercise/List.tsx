@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Badge } from "primereact/badge";
 
 import { ExerciseDialog } from "./ExerciseDialog";
 import { StepDialog } from "./StepDialog";
@@ -12,6 +13,7 @@ import { StepDialog } from "./StepDialog";
 import exercisesReducer from "./exercisesReducer";
 import React from "react";
 import { Exercise, Step } from "./interfaces";
+import ErrorDialog, { ErrorDialogType } from "../ErrorDialog";
 
 function createInitialState() {
   return [];
@@ -23,6 +25,8 @@ interface reducerFunction {
 
 export function ListExercise() {
   const toast = useRef<Toast>(null);
+  const [errorObject, setErrorObject] = useState<ErrorDialogType | null>(null);
+  const [showError, setShowError] = useState<boolean>(false);
 
   const [expandedRows, setExpandedRows] = useState<any[]>([]);
 
@@ -152,7 +156,7 @@ export function ListExercise() {
           className="p-2 border-3 border-white"
         />
       </div>
-      <div className="col-10 flex justify-content-end align-items-center">
+      <div className="col-8 flex justify-content-end align-items-center">
         <Button
           icon="pi pi-plus"
           label="Expand All"
@@ -165,6 +169,33 @@ export function ListExercise() {
           onClick={collapseAll}
           text
         />
+      </div>
+      <div className="col-2 flex justify-content-end align-items-center">
+        {showError ? (
+          <>
+            <Tooltip target=".custom-target-icon" />
+            <i
+              className="custom-target-icon pi pi-circle-fill text-red-600"
+              data-pr-tooltip="Offline"
+              data-pr-position="right"
+              data-pr-at="right+5 top"
+              data-pr-my="left center-2"
+              style={{ fontSize: "2rem", cursor: "pointer" }}
+            ></i>
+          </>
+        ) : (
+          <>
+            <Tooltip target=".custom-target-icon" />
+            <i
+              className="custom-target-icon pi pi-circle-fill text-cyan-700"
+              data-pr-tooltip="Online"
+              data-pr-position="right"
+              data-pr-at="right+5 top"
+              data-pr-my="left center-2"
+              style={{ fontSize: "2rem", cursor: "pointer" }}
+            ></i>
+          </>
+        )}
       </div>
     </div>
   );
@@ -354,12 +385,19 @@ export function ListExercise() {
       },
     };
 
+    let err: ErrorDialogType = {};
     // Make the fetch request with the provided options
     fetch("http://localhost:8080/api/exercises", options)
       .then((response) => {
         // Check if the request was successful
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          err.title = "Network response was not ok";
+          err.message = response.statusText;
+          err.dialogTimeout = 20;
+          setErrorObject(err);
+          setShowError(true);
+
+          // throw new Error("Network response was not ok");
         }
         // Parse the response as JSON
         return response.json();
@@ -371,7 +409,12 @@ export function ListExercise() {
       })
       .catch((error) => {
         // Handle any errors that occurred during the fetch
-        console.error("Fetch error:", error);
+        err.title = "Network response was not ok";
+        err.message = error.message;
+        err.dialogTimeout = 20;
+        setErrorObject(err);
+        setShowError(true);
+        // console.error("Fetch error:", error);
       });
   }
 
@@ -442,6 +485,15 @@ export function ListExercise() {
         setVisible={setVisibleStep}
       />
       <ConfirmDialog />
+      {showError ? (
+        <ErrorDialog
+          title={errorObject?.title}
+          message={errorObject?.message}
+          dialogTimeout={errorObject?.dialogTimeout}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 }
