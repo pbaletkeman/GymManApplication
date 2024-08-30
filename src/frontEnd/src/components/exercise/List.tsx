@@ -31,8 +31,8 @@ export function ListExercise() {
     []
   );
 
-  const [visibleExercise, setVisibleExercise] = useState(false);
-  const [visibleStep, setVisibleStep] = useState(false);
+  const [visibleExercise, setVisibleExercise] = useState<boolean>(false);
+  const [visibleStep, setVisibleStep] = useState<boolean>(false);
   const [currentEx, setCurrentEx] = useState<Exercise | null>(null);
   const [currentStep, setCurrentStep] = useState<Step>({
     name: null,
