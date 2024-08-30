@@ -15,23 +15,34 @@ export default function exercisesReducer(
         id: action.exercise?.id,
         steps: action.exercise?.steps,
       };
-      return [...data, tempItem];
+      if (data) {
+        return [...data, tempItem];
+      } else {
+        return [tempItem];
+      }
     }
     case "changed": {
-      return data.map((t: Exercise) => {
-        if (t.id === action.exercise?.id) {
-          return action.exercise;
-        } else {
-          return t;
-        }
-      });
+      if (data) {
+        return data.map((t: Exercise) => {
+          if (t?.id === action.exercise?.id) {
+            return action.exercise ?? t;
+          } else {
+            return t;
+          }
+        });
+      } else {
+        return [action?.exercise ?? ({} as Exercise)];
+      }
     }
     case "deleted": {
-      return action.data.filter((t: Exercise) => t.id !== action.exercise?.id);
+      return (
+        action.data?.filter((t: Exercise) => t?.id !== action.exercise?.id) ?? [
+          {} as Exercise,
+        ]
+      );
     }
     case "loaded": {
-      console.log(action);
-      return action.data;
+      return action.data ?? [{} as Exercise];
     }
     default: {
       throw Error("Unknown action: " + action.type);
