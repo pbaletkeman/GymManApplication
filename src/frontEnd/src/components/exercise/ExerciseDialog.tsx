@@ -45,6 +45,7 @@ export function ExerciseDialog({
   );
 
   function handleAddExcerise(newExercise: Exercise) {
+    /* need to display ok/error */
     console.log("ADD");
     dispatch({
       type: "added",
@@ -53,6 +54,7 @@ export function ExerciseDialog({
   }
 
   function handleChangeExcercise(exercise: Exercise) {
+    /* need to display ok/error */
     console.log("UPDATE");
 
     // dispatch({
@@ -132,8 +134,8 @@ export function ExerciseDialog({
     }
   }, [setName, setExerciseId, setDescription, exercise]);
 
-  console.log("exercise");
-  console.log(exercise);
+  // console.log("exercise");
+  // console.log(exercise);
   return (
     <div className="card flex justify-content-center">
       <Dialog

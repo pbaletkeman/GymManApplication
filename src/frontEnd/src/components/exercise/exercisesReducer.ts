@@ -1,3 +1,4 @@
+import { PostExerciseData } from "./API";
 import { Exercise } from "./interfaces";
 
 export interface ExerciseReducerFunction {
@@ -18,9 +19,11 @@ export default function exercisesReducer(
     case "added": {
       let tempItem: Exercise = {
         name: action.exercise?.name,
-        id: action.exercise?.id,
-        steps: action.exercise?.steps,
+        description: action.exercise?.description,
       };
+      console.log("tempItem");
+      console.log(tempItem);
+      PostExerciseData(tempItem);
       if (data) {
         return [...data, tempItem];
       } else {
