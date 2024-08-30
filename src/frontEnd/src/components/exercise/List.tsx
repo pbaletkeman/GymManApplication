@@ -180,7 +180,7 @@ export function ListExercise() {
               data-pr-position="right"
               data-pr-at="right+5 top"
               data-pr-my="left center-2"
-              style={{ fontSize: "2rem", cursor: "pointer" }}
+              style={{ fontSize: "2rem" }}
             ></i>
           </>
         ) : (
@@ -192,7 +192,7 @@ export function ListExercise() {
               data-pr-position="right"
               data-pr-at="right+5 top"
               data-pr-my="left center-2"
-              style={{ fontSize: "2rem", cursor: "pointer" }}
+              style={{ fontSize: "2rem" }}
             ></i>
           </>
         )}
