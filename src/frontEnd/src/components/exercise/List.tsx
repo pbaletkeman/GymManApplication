@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef, useReducer } from "react";
 import { DataTable, DataTableValue } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ExerciseService } from "./Service/ExerciseService.jsx";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
-import { ExerciseDialog } from "./ExerciseDialog.jsx";
-import { StepDialog } from "./StepDialog.js";
+import { ExerciseDialog } from "./ExerciseDialog";
+import { StepDialog } from "./StepDialog";
 
-import exercisesReducer from "./exercisesReducer.js";
+import exercisesReducer from "./exercisesReducer";
 import React from "react";
-import { Exercise, Step } from "./interfaces.js";
+import { Exercise, Step } from "./interfaces";
 
 function createInitialState() {
   return [];
@@ -298,21 +297,21 @@ export function ListExercise() {
   };
 
   function handleAddExcerise(newExercise: Exercise) {
-    dispatch: ({
+    dispatch({
       type: "added",
       exercise: newExercise,
     });
   }
 
   function handleChangeExcercise(exercise: Exercise) {
-    dispatch: ({
+    dispatch({
       type: "changed",
       id: exercise,
     });
   }
 
   function handleDeleteExcercise(exerciseId: Exercise) {
-    dispatch: ({
+    dispatch({
       type: "deleted",
       id: { name: "", id: exerciseId.id, steps: [] },
     });

@@ -8,7 +8,17 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { Exercise } from "./interfaces";
 
-export function ExerciseDialog({ exercise, visible, setVisible }) {
+interface ExerciseDialog {
+  exercise: Exercise | null;
+  visible: boolean;
+  setVisible: (a: boolean) => void;
+}
+
+export function ExerciseDialog({
+  exercise,
+  visible,
+  setVisible,
+}: ExerciseDialog) {
   let tempId = 0;
   let tempName = "";
   let tempDescription = "";
@@ -24,9 +34,9 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
     }
   }
 
-  const [exerciseId, setExerciseId] = useState(tempId);
-  const [name, setName] = useState(tempName);
-  const [description, setDescription] = useState(tempDescription);
+  const [exerciseId, setExerciseId] = useState<number>(tempId);
+  const [name, setName] = useState<string>(tempName);
+  const [description, setDescription] = useState<string>(tempDescription);
 
   const footerContent = (
     <div>
@@ -60,7 +70,7 @@ export function ExerciseDialog({ exercise, visible, setVisible }) {
     }
   }
 
-  function saveExercise(exerciseId, name, description) {
+  function saveExercise(exerciseId: number, name: string, description: string) {
     let updatedExercise: Exercise = { name: "", id: -1, steps: [] };
     console.log("-------------");
     console.log("save");
