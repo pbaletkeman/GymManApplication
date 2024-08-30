@@ -1,5 +1,9 @@
 import { Exercise } from "./interfaces";
 
+export interface ExerciseReducerFunction {
+  (state: Exercise[], actions: any): Exercise[];
+}
+
 export default function exercisesReducer(
   data: Exercise[] | undefined,
   action: {

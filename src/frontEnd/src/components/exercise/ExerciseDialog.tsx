@@ -4,9 +4,10 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { useEffect, useState } from "react";
-import React from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import { Exercise } from "./interfaces";
+
+import exercisesReducer, { ExerciseReducerFunction } from "./exercisesReducer";
 
 interface ExerciseDialog {
   exercise: Exercise | null;
@@ -38,6 +39,28 @@ export function ExerciseDialog({
   const [name, setName] = useState<string>(tempName);
   const [description, setDescription] = useState<string>(tempDescription);
 
+  const [exercises, dispatch] = useReducer<ExerciseReducerFunction>(
+    exercisesReducer,
+    []
+  );
+
+  function handleAddExcerise(newExercise: Exercise) {
+    console.log("ADD");
+    dispatch({
+      type: "added",
+      exercise: newExercise,
+    });
+  }
+
+  function handleChangeExcercise(exercise: Exercise) {
+    console.log("UPDATE");
+
+    // dispatch({
+    //   type: "changed",
+    //   id: exercise,
+    // });
+  }
+
   const footerContent = (
     <div>
       <Button
@@ -48,7 +71,7 @@ export function ExerciseDialog({
         autoFocus
       />
       <Button
-        label="Update"
+        label={exerciseId && exerciseId > 0 ? "Update" : "Save"}
         icon="pi pi-check"
         onClick={() => saveExercise(exerciseId, name, description)}
       />
@@ -63,7 +86,7 @@ export function ExerciseDialog({
   }
 
   function headerContent() {
-    if (name) {
+    if (exerciseId && exerciseId > 0) {
       return "Edit '" + name + "'";
     } else {
       return "New";
@@ -71,14 +94,27 @@ export function ExerciseDialog({
   }
 
   function saveExercise(exerciseId: number, name: string, description: string) {
-    let updatedExercise: Exercise = { name: "", id: -1, steps: [] };
+    let updatedExercise: Exercise = {
+      name: name,
+      id: exerciseId,
+      description: description,
+      steps: [],
+    };
     console.log("-------------");
     console.log("save");
-    updatedExercise.id = exerciseId;
-    updatedExercise.name = name;
-    updatedExercise.description = description;
+    // updatedExercise.id = exerciseId;
+    // updatedExercise.name = name;
+    // updatedExercise.description = description;
     console.log(updatedExercise);
     console.log("-------------");
+    if (updatedExercise && updatedExercise.id && updatedExercise.id > 0) {
+      handleChangeExcercise(updatedExercise);
+    } else {
+      handleAddExcerise(updatedExercise);
+    }
+
+    cancelEdit();
+
     setVisible(false);
   }
 

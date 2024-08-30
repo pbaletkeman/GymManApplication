@@ -1,27 +1,18 @@
-import { useState, useEffect, useRef, useReducer } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import { DataTable, DataTableValue } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { Badge } from "primereact/badge";
 
 import { ExerciseDialog } from "./ExerciseDialog";
 import { StepDialog } from "./StepDialog";
 
-import exercisesReducer from "./exercisesReducer";
-import React from "react";
+import exercisesReducer, { ExerciseReducerFunction } from "./exercisesReducer";
 import { Exercise, Step } from "./interfaces";
 import ErrorDialog, { ErrorDialogType } from "../ErrorDialog";
-
-function createInitialState() {
-  return [];
-}
-
-interface reducerFunction {
-  (state: Exercise[], actions: any): Exercise[];
-}
+import { GetExerciseDataList } from "./API";
 
 export function ListExercise() {
   const toast = useRef<Toast>(null);
@@ -30,7 +21,7 @@ export function ListExercise() {
 
   const [expandedRows, setExpandedRows] = useState<any[]>([]);
 
-  const [exercises, dispatch] = useReducer<reducerFunction>(
+  const [exercises, dispatch] = useReducer<ExerciseReducerFunction>(
     exercisesReducer,
     []
   );
@@ -327,19 +318,20 @@ export function ListExercise() {
     );
   };
 
-  function handleAddExcerise(newExercise: Exercise) {
-    dispatch({
-      type: "added",
-      exercise: newExercise,
-    });
-  }
+  // function handleAddExcerise(newExercise: Exercise) {
+  //   console.log("AAAADDDD");
+  //   // dispatch({
+  //   //   type: "added",
+  //   //   exercise: newExercise,
+  //   // });
+  // }
 
-  function handleChangeExcercise(exercise: Exercise) {
-    dispatch({
-      type: "changed",
-      id: exercise,
-    });
-  }
+  // function handleChangeExcercise(exercise: Exercise) {
+  //   dispatch({
+  //     type: "changed",
+  //     id: exercise,
+  //   });
+  // }
 
   function handleDeleteExcercise(exerciseId: Exercise) {
     dispatch({
@@ -348,7 +340,7 @@ export function ListExercise() {
     });
   }
 
-  function handleLoadExcerise(data: Exercise) {
+  function handleLoadExcerise(data: Exercise[]) {
     dispatch({
       type: "loaded",
       data: data,
@@ -376,50 +368,55 @@ export function ListExercise() {
     }
   }
 
-  function makeAPICall() {
-    // Set up options for the fetch request
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json", // Set content type to JSON
-      },
-    };
+  // function makeAPICall() {
+  //   // Set up options for the fetch request
+  //   const options = {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json", // Set content type to JSON
+  //     },
+  //   };
 
-    let err: ErrorDialogType = {};
-    // Make the fetch request with the provided options
-    fetch("http://localhost:8080/api/exercises", options)
-      .then((response) => {
-        // Check if the request was successful
-        if (!response.ok) {
-          err.title = "Network response was not ok";
-          err.message = response.statusText;
-          err.dialogTimeout = 20;
-          setErrorObject(err);
-          setShowError(true);
+  //   let err: ErrorDialogType = {};
+  //   // Make the fetch request with the provided options
+  //   fetch("http://localhost:8080/api/exercises", options)
+  //     .then((response) => {
+  //       // Check if the request was successful
+  //       if (!response.ok) {
+  //         err.title = "Network response was not ok";
+  //         err.message = response.statusText;
+  //         err.dialogTimeout = 20;
+  //         setErrorObject(err);
+  //         setShowError(true);
 
-          // throw new Error("Network response was not ok");
-        }
-        // Parse the response as JSON
-        return response.json();
-      })
-      .then((data) => {
-        // Handle the JSON data
-        // console.log(data);
-        handleLoadExcerise(data);
-      })
-      .catch((error) => {
-        // Handle any errors that occurred during the fetch
-        err.title = "Network response was not ok";
-        err.message = error.message;
-        err.dialogTimeout = 20;
-        setErrorObject(err);
-        setShowError(true);
-        // console.error("Fetch error:", error);
-      });
-  }
+  //         // throw new Error("Network response was not ok");
+  //       }
+  //       // Parse the response as JSON
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       // Handle the JSON data
+  //       // console.log(data);
+  //       handleLoadExcerise(data);
+  //     })
+  //     .catch((error) => {
+  //       // Handle any errors that occurred during the fetch
+  //       err.title = "Network response was not ok";
+  //       err.message = error.message;
+  //       err.dialogTimeout = 20;
+  //       setErrorObject(err);
+  //       setShowError(true);
+  //       // console.error("Fetch error:", error);
+  //     });
+  // }
 
   useEffect(() => {
-    makeAPICall();
+    GetExerciseDataList(
+      setErrorObject,
+      setShowError,
+      handleLoadExcerise,
+      exercises
+    );
     // ExerciseService.getExercisesWithStepsSmall().then((data) => {
     //   handleLoadExcerise(data);
     // });
