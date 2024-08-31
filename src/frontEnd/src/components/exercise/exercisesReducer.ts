@@ -11,6 +11,7 @@ export default function exercisesReducer(
     exercise?: Exercise | undefined;
     type: string;
     data?: Exercise[] | undefined;
+    status?: any | null | undefined;
   }
 ): Exercise[] {
   console.log("Action");

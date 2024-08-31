@@ -38,6 +38,7 @@ export function ListExercise() {
   });
   const [selectedExercises, setSelectedExercises] = useState<DataTableValue>();
   const [selectedSteps, setSelectedSteps] = useState<DataTableValue>();
+  const [statusObj, setStatusObj] = useState<any | null>(null);
 
   const accept = () => {
     toast.current?.show({
@@ -373,7 +374,8 @@ export function ListExercise() {
       setErrorObject,
       setShowError,
       handleLoadExcerise,
-      exercises
+      exercises,
+      setStatusObj
     );
   }, []);
 
@@ -430,6 +432,7 @@ export function ListExercise() {
         exercise={currentEx}
         visible={visibleExercise}
         setVisible={setVisibleExercise}
+        setStatusObj={setStatusObj}
       />
       <StepDialog
         step={currentStep}

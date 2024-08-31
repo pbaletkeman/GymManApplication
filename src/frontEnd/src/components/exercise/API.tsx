@@ -1,7 +1,10 @@
 import { ErrorDialogType } from "../ErrorDialog";
 import { Exercise } from "./interfaces";
 
-export function PostExerciseData(newExercise: Exercise) {
+export function PostExerciseData(
+  newExercise: Exercise,
+  statusObj?: (a: any) => void
+) {
   // Set up options for the fetch request
   const options = {
     method: "POST",
@@ -43,7 +46,8 @@ export function GetExerciseDataList(
   setErrorObject: (a: any) => void,
   setShowError: (a: boolean) => void,
   handleLoadExcerise: (a: Exercise[]) => void,
-  data: Exercise[]
+  data: Exercise[],
+  setStatusObj?: (a: any) => void
 ) {
   // Set up options for the fetch request
   const options = {

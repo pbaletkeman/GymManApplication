@@ -13,12 +13,14 @@ interface ExerciseDialog {
   exercise: Exercise | null;
   visible: boolean;
   setVisible: (a: boolean) => void;
+  setStatusObj: (a: any) => void;
 }
 
 export function ExerciseDialog({
   exercise,
   visible,
   setVisible,
+  setStatusObj,
 }: ExerciseDialog) {
   let tempId = 0;
   let tempName = "";
@@ -44,16 +46,17 @@ export function ExerciseDialog({
     []
   );
 
-  function handleAddExcerise(newExercise: Exercise) {
+  function handleAddExcerise(newExercise: Exercise, status: any) {
     /* need to display ok/error */
     console.log("ADD");
     dispatch({
       type: "added",
       exercise: newExercise,
+      status: status,
     });
   }
 
-  function handleChangeExcercise(exercise: Exercise) {
+  function handleChangeExcercise(exercise: Exercise, status: any) {
     /* need to display ok/error */
     console.log("UPDATE");
 
@@ -75,7 +78,9 @@ export function ExerciseDialog({
       <Button
         label={exerciseId && exerciseId > 0 ? "Update" : "Save"}
         icon="pi pi-check"
-        onClick={() => saveExercise(exerciseId, name, description)}
+        onClick={() =>
+          saveExercise(exerciseId, name, description, setStatusObj)
+        }
       />
     </div>
   );
@@ -95,7 +100,12 @@ export function ExerciseDialog({
     }
   }
 
-  function saveExercise(exerciseId: number, name: string, description: string) {
+  function saveExercise(
+    exerciseId: number,
+    name: string,
+    description: string,
+    setStatusObj: (a: any) => void
+  ) {
     let updatedExercise: Exercise = {
       name: name,
       id: exerciseId,
@@ -110,9 +120,9 @@ export function ExerciseDialog({
     console.log(updatedExercise);
     console.log("-------------");
     if (updatedExercise && updatedExercise.id && updatedExercise.id > 0) {
-      handleChangeExcercise(updatedExercise);
+      handleChangeExcercise(updatedExercise, statusItem);
     } else {
-      handleAddExcerise(updatedExercise);
+      handleAddExcerise(updatedExercise, statusItem);
     }
 
     cancelEdit();
