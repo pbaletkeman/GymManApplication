@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-
-export interface ErrorDialogType {
-  title?: string | null | undefined;
-  message?: string | null | undefined;
-  dialogTimeout?: number | null | undefined;
-}
+import { FetchStatusType } from "./exercise/interfaces";
 
 export default function ErrorDialog({
   title,
   message,
   dialogTimeout,
-}: ErrorDialogType) {
+  status,
+}: FetchStatusType) {
   let duration = 10;
   if (dialogTimeout) {
     duration = Math.abs(dialogTimeout);

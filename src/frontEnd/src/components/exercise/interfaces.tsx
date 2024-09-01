@@ -12,3 +12,10 @@ export interface Step {
   stepNum: number | null;
   exerciseId: number | null | undefined;
 }
+
+export interface FetchStatusType {
+  title?: string | null | undefined;
+  message?: string | null | undefined;
+  dialogTimeout?: number | null | undefined;
+  status?: 0 | 1 | undefined;
+}

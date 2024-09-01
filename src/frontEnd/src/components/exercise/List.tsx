@@ -10,13 +10,15 @@ import { ExerciseDialog } from "./ExerciseDialog";
 import { StepDialog } from "./StepDialog";
 
 import exercisesReducer, { ExerciseReducerFunction } from "./exercisesReducer";
-import { Exercise, Step } from "./interfaces";
-import ErrorDialog, { ErrorDialogType } from "../ErrorDialog";
+import { Exercise, FetchStatusType, Step } from "./interfaces";
+import ErrorDialog from "../ErrorDialog";
 import { GetExerciseDataList } from "./API";
 
 export function ListExercise() {
   const toast = useRef<Toast>(null);
-  const [errorObject, setErrorObject] = useState<ErrorDialogType | null>(null);
+  const [statusObject, setStatusObject] = useState<FetchStatusType | null>(
+    null
+  );
   const [showError, setShowError] = useState<boolean>(false);
 
   const [expandedRows, setExpandedRows] = useState<any[]>([]);
@@ -371,11 +373,10 @@ export function ListExercise() {
 
   useEffect(() => {
     GetExerciseDataList(
-      setErrorObject,
+      setStatusObject,
       setShowError,
       handleLoadExcerise,
-      exercises,
-      setStatusObj
+      exercises
     );
   }, []);
 
@@ -442,9 +443,10 @@ export function ListExercise() {
       <ConfirmDialog />
       {showError ? (
         <ErrorDialog
-          title={errorObject?.title}
-          message={errorObject?.message}
-          dialogTimeout={errorObject?.dialogTimeout}
+          title={statusObject?.title}
+          message={statusObject?.message}
+          dialogTimeout={statusObject?.dialogTimeout}
+          status={statusObject?.status}
         />
       ) : (
         ""
