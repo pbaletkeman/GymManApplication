@@ -16,9 +16,6 @@ import { GetExerciseDataList } from "./API";
 
 export function ListExercise() {
   const toast = useRef<Toast>(null);
-  const [statusObject, setStatusObject] = useState<FetchStatusType | null>(
-    null
-  );
   const [showError, setShowError] = useState<boolean>(false);
 
   const [expandedRows, setExpandedRows] = useState<any[]>([]);
@@ -40,15 +37,24 @@ export function ListExercise() {
   });
   const [selectedExercises, setSelectedExercises] = useState<DataTableValue>();
   const [selectedSteps, setSelectedSteps] = useState<DataTableValue>();
-  const [statusObj, setStatusObj] = useState<any | null>(null);
+  const [statusObj, setStatusObj] = useState<FetchStatusType>();
 
-  const accept = () => {
+  const acceptDelete = () => {
     toast.current?.show({
       severity: "info",
-      summary: "Confirmed",
-      detail: "You have accepted",
+      summary: "Deleting",
+      detail: "Deleting Selected Records",
       life: 3000,
     });
+
+    if (selectedExercises) {
+      const deleteIDs = selectedExercises.flatMap((x: Exercise) => x.id);
+      // console.log("deleteIDs");
+      // console.log(deleteIDs);
+
+      handleDeleteExcercise(deleteIDs.join(), setStatusObj);
+      // setSelectedExercises([]);
+    }
   };
 
   const allowExpansion = (rowData: { steps: Step[] }) => {
@@ -67,8 +73,8 @@ export function ListExercise() {
       icon: "pi pi-info-circle",
       defaultFocus: "reject",
       acceptClassName: "p-button-danger",
-      accept,
-      reject,
+      accept: acceptDelete,
+      reject: rejectDelete,
     });
   };
 
@@ -77,7 +83,9 @@ export function ListExercise() {
       return (
         <Button
           icon="pi pi-times"
-          onClick={() => confirmDelete(selected.length)}
+          onClick={() => {
+            confirmDelete(selected.length);
+          }}
           className="p-2 border-white-alpha-20 text-color bg-red-800"
         >
           &nbsp;Delete Selected
@@ -266,13 +274,14 @@ export function ListExercise() {
     );
   };
 
-  const reject = () => {
+  const rejectDelete = () => {
     toast.current?.show({
       severity: "warn",
       summary: "Rejected",
-      detail: "You have rejected",
+      detail: "Canceling Action",
       life: 3000,
     });
+    setSelectedExercises([]);
   };
 
   const rowExpansionTemplate = (data: Exercise) => {
@@ -336,10 +345,15 @@ export function ListExercise() {
   //   });
   // }
 
-  function handleDeleteExcercise(exerciseId: Exercise) {
+  function handleDeleteExcercise(
+    exerciseIds: string,
+    setStatusObj: (a: FetchStatusType) => void
+  ) {
     dispatch({
       type: "deleted",
-      id: { name: "", id: exerciseId.id, steps: [] },
+      batchIds: exerciseIds,
+      data: exercises,
+      setStatusObject: setStatusObj,
     });
   }
 
@@ -372,8 +386,9 @@ export function ListExercise() {
   }
 
   useEffect(() => {
+    console.log("use effect");
     GetExerciseDataList(
-      setStatusObject,
+      setStatusObj,
       setShowError,
       handleLoadExcerise,
       exercises
@@ -443,10 +458,10 @@ export function ListExercise() {
       <ConfirmDialog />
       {showError ? (
         <ErrorDialog
-          title={statusObject?.title}
-          message={statusObject?.message}
-          dialogTimeout={statusObject?.dialogTimeout}
-          status={statusObject?.status}
+          title={statusObj?.title}
+          message={statusObj?.message}
+          dialogTimeout={statusObj?.dialogTimeout}
+          status={statusObj?.status}
         />
       ) : (
         ""

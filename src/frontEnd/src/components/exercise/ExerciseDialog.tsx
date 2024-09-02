@@ -5,15 +5,15 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import React, { useReducer, useEffect, useState } from "react";
-import { Exercise } from "./interfaces";
+import { Exercise, FetchStatusType } from "./interfaces";
 
 import exercisesReducer, { ExerciseReducerFunction } from "./exercisesReducer";
 
-interface ExerciseDialog {
+interface ExerciseDialogType {
   exercise: Exercise | null;
   visible: boolean;
   setVisible: (a: boolean) => void;
-  setStatusObj: (a: any) => void;
+  setStatusObj: (a: FetchStatusType) => void;
 }
 
 export function ExerciseDialog({
@@ -21,7 +21,7 @@ export function ExerciseDialog({
   visible,
   setVisible,
   setStatusObj,
-}: ExerciseDialog) {
+}: ExerciseDialogType) {
   let tempId = 0;
   let tempName = "";
   let tempDescription = "";
@@ -40,23 +40,35 @@ export function ExerciseDialog({
   const [exerciseId, setExerciseId] = useState<number>(tempId);
   const [name, setName] = useState<string>(tempName);
   const [description, setDescription] = useState<string>(tempDescription);
+  const [statusItem, setStatusItem] = useState<FetchStatusType>();
+  const [savedExercise, setSavedExercise] = useState<Exercise>();
+  // const [statusObject, setStatusObject] = useState<FetchStatusType>();
 
   const [exercises, dispatch] = useReducer<ExerciseReducerFunction>(
     exercisesReducer,
     []
   );
 
-  function handleAddExcerise(newExercise: Exercise, status: any) {
+  function handleAddExcerise(
+    newExercise: Exercise,
+    setStatusObject: (a: FetchStatusType) => void
+  ) {
     /* need to display ok/error */
     console.log("ADD");
     dispatch({
       type: "added",
       exercise: newExercise,
-      status: status,
+      data: exercises,
+      setStatusObject: setStatusObject,
+      setSaved: setSavedExercise,
+      batchIds: "",
     });
   }
 
-  function handleChangeExcercise(exercise: Exercise, status: any) {
+  function handleChangeExcercise(
+    exercise: Exercise,
+    setStatusObject: (a: FetchStatusType) => void
+  ) {
     /* need to display ok/error */
     console.log("UPDATE");
 
@@ -104,7 +116,7 @@ export function ExerciseDialog({
     exerciseId: number,
     name: string,
     description: string,
-    setStatusObj: (a: any) => void
+    setStatusObj: (a: FetchStatusType) => void
   ) {
     let updatedExercise: Exercise = {
       name: name,
@@ -112,17 +124,10 @@ export function ExerciseDialog({
       description: description,
       steps: [],
     };
-    console.log("-------------");
-    console.log("save");
-    // updatedExercise.id = exerciseId;
-    // updatedExercise.name = name;
-    // updatedExercise.description = description;
-    console.log(updatedExercise);
-    console.log("-------------");
     if (updatedExercise && updatedExercise.id && updatedExercise.id > 0) {
-      handleChangeExcercise(updatedExercise, statusItem);
+      handleChangeExcercise(updatedExercise, setStatusObj);
     } else {
-      handleAddExcerise(updatedExercise, statusItem);
+      handleAddExcerise(updatedExercise, setStatusObj);
     }
 
     cancelEdit();
@@ -144,8 +149,6 @@ export function ExerciseDialog({
     }
   }, [setName, setExerciseId, setDescription, exercise]);
 
-  // console.log("exercise");
-  // console.log(exercise);
   return (
     <div className="card flex justify-content-center">
       <Dialog

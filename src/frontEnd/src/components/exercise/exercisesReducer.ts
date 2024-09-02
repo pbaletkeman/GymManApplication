@@ -1,5 +1,5 @@
-import { PostExerciseData } from "./API";
-import { Exercise } from "./interfaces";
+import { DeleteExerciseData, PostExerciseData } from "./API";
+import { Exercise, FetchStatusType } from "./interfaces";
 
 export interface ExerciseReducerFunction {
   (state: Exercise[], actions: any): Exercise[];
@@ -8,10 +8,12 @@ export interface ExerciseReducerFunction {
 export default function exercisesReducer(
   data: Exercise[] | undefined,
   action: {
-    exercise?: Exercise | undefined;
     type: string;
+    exercise?: Exercise | undefined;
     data?: Exercise[] | undefined;
-    status?: any | null | undefined;
+    setStatusObject: (a: FetchStatusType) => void | undefined;
+    setSaved: (a: Exercise) => void;
+    batchIds?: string;
   }
 ): Exercise[] {
   console.log("Action");
@@ -22,9 +24,7 @@ export default function exercisesReducer(
         name: action.exercise?.name,
         description: action.exercise?.description,
       };
-      console.log("tempItem");
-      console.log(tempItem);
-      PostExerciseData(tempItem);
+      PostExerciseData(action.setSaved, tempItem, action.setStatusObject);
       if (data) {
         return [...data, tempItem];
       } else {
@@ -45,11 +45,15 @@ export default function exercisesReducer(
       }
     }
     case "deleted": {
-      return (
-        action.data?.filter((t: Exercise) => t?.id !== action.exercise?.id) ?? [
-          {} as Exercise,
-        ]
-      );
+      if (action.batchIds && action.batchIds.length > 0) {
+        const splitIds = action.batchIds.split(",").map((a) => parseInt(a));
+        DeleteExerciseData(action.batchIds, action.setStatusObject);
+        // return (
+        //   (action.data || []).filter(
+        //     (x) => !splitIds.includes(x.id as number)
+        //   ) || []
+        // );
+      }
     }
     case "loaded": {
       return action.data ?? [{} as Exercise];

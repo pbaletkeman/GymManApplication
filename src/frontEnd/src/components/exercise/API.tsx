@@ -18,36 +18,36 @@ export function DeleteExerciseData(
     signal: AbortSignal.timeout(ExerciseAPIConfig.Timeout),
   };
 
-  let status: FetchStatusType = { status: 0 };
-  // Make the fetch request with the provided options
-  fetch(ExerciseAPIConfig.URL + "/" + ids, options)
-    .then((response) => {
-      // Check if the request was successful
-      if (!response.ok) {
-        status.title = "Network response was not ok";
-        status.message = response.statusText;
-        status.dialogTimeout = 20;
-        status.status = 1;
-        setStatusObj(status);
-        throw new Error("Network response was not ok");
-      }
-      // Parse the response as JSON
-      return response.json();
-    })
-    .then((data) => {
-      setStatusObj({ status: 0 });
-      // Handle the JSON data
-      // console.log(data);
-    })
-    .catch((error) => {
-      // Handle any errors that occurred during the fetch
-      status.title = "Network response was not ok";
-      status.message = error.message;
-      status.dialogTimeout = 20;
-      status.status = 1;
-      setStatusObj(status);
-      console.error("Fetch error:", error);
-    });
+  // let status: FetchStatusType = { status: 0 };
+  // // Make the fetch request with the provided options
+  // fetch(ExerciseAPIConfig.URL + "/" + ids, options)
+  //   .then((response) => {
+  //     // Check if the request was successful
+  //     if (!response.ok) {
+  //       status.title = "Network response was not ok";
+  //       status.message = response.statusText;
+  //       status.dialogTimeout = 20;
+  //       status.status = 1;
+  //       setStatusObj(status);
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     // Parse the response as JSON
+  //     return response.json();
+  //   })
+  //   .then((data) => {
+  //     setStatusObj({ status: 0 });
+  //     // Handle the JSON data
+  //     // console.log(data);
+  //   })
+  //   .catch((error) => {
+  //     // Handle any errors that occurred during the fetch
+  //     status.title = "Network response was not ok";
+  //     status.message = error.message;
+  //     status.dialogTimeout = 20;
+  //     status.status = 1;
+  //     setStatusObj(status);
+  //     console.error("Fetch error:", error);
+  //   });
 }
 
 export function PutExerciseData(
