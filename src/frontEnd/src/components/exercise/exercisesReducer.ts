@@ -48,11 +48,11 @@ export default function exercisesReducer(
       if (action.batchIds && action.batchIds.length > 0) {
         const splitIds = action.batchIds.split(",").map((a) => parseInt(a));
         DeleteExerciseData(action.batchIds, action.setStatusObject);
-        // return (
-        //   (action.data || []).filter(
-        //     (x) => !splitIds.includes(x.id as number)
-        //   ) || []
-        // );
+        return (
+          (action.data || []).filter(
+            (x) => !splitIds.includes(x.id as number)
+          ) || []
+        );
       }
     }
     case "loaded": {
